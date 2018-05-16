@@ -30,11 +30,25 @@ import java.util.ArrayList;
  **********************************************************************************************************************/
 public class Property {
     private String name;
-    private String cardinality;
     private String type;
     private String defaultValue;
-    private ArrayList<Object> values;
+    private Object value;
     private JSONObject schema;
+
+    public Property(String name, String type, String defaultValue, Object value) {
+        this.name = name;
+        this.type = type;
+        this.defaultValue = defaultValue;
+        this.value = value;
+        this.schema = null;
+    }
+    public Property(String name, String type, String defaultValue, Object value, JSONObject schema) {
+        this.name = name;
+        this.type = type;
+        this.defaultValue = defaultValue;
+        this.value = value;
+        this.schema = schema;
+    }
 
     public String getName() {
         return name;
@@ -42,14 +56,6 @@ public class Property {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCardinality() {
-        return cardinality;
-    }
-
-    public void setCardinality(String cardinality) {
-        this.cardinality = cardinality;
     }
 
     public String getType() {
@@ -68,19 +74,19 @@ public class Property {
         this.defaultValue = defaultValue;
     }
 
-    public ArrayList<Object> getValues() {
-        return values;
-    }
-
-    public void setValues(ArrayList<Object> values) {
-        this.values = values;
-    }
-
     public JSONObject getSchema() {
         return schema;
     }
 
     public void setSchema(JSONObject schema) {
         this.schema = schema;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

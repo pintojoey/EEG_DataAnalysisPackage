@@ -31,8 +31,19 @@ import java.util.ArrayList;
 public class Block {
     private String name;
     private String family;
-    private ArrayList<Data> input;
-    private ArrayList<Data> output;
+    private String cardinality;
+    private Object input;
+    private Object output;
+    private ArrayList<Property> properties;
+
+    public Block(String name, String family, String cardinality, Object input, Object output, ArrayList<Property> properties) {
+        this.name = name;
+        this.family = family;
+        this.cardinality = cardinality;
+        this.input = input;
+        this.output = output;
+        this.properties = properties;
+    }
 
     public String getName() {
         return name;
@@ -50,19 +61,35 @@ public class Block {
         this.family = family;
     }
 
-    public ArrayList<Data> getInput() {
+    public ArrayList<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(ArrayList<Property> properties) {
+        this.properties = properties;
+    }
+
+    public String getCardinality() {
+        return cardinality;
+    }
+
+    public void setCardinality(String cardinality) {
+        this.cardinality = cardinality;
+    }
+
+    public Object getInput() {
         return input;
     }
 
-    public void setInput(ArrayList<Data> input) {
+    public void setInput(Object input) {
         this.input = input;
     }
 
-    public ArrayList<Data> getOutput() {
+    public Object getOutput() {
         return output;
     }
 
-    public void setOutput(ArrayList<Data> output) {
+    public void setOutput(Object output) {
         this.output = output;
     }
 }

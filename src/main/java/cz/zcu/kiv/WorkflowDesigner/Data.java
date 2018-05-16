@@ -32,8 +32,15 @@ import java.util.ArrayList;
 public class Data {
     private String name;
     private String type;
-    private ArrayList<Object> values;
     private JSONObject schema;
+    private Object value;
+
+    public Data(String name, String type, Object value, JSONObject schema) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
+        this.schema = schema;
+    }
 
     public String getName() {
         return name;
@@ -51,19 +58,19 @@ public class Data {
         this.type = type;
     }
 
-    public ArrayList<Object> getValues() {
-        return values;
-    }
-
-    public void setValues(ArrayList<Object> values) {
-        this.values = values;
-    }
-
     public JSONObject getSchema() {
         return schema;
     }
 
     public void setSchema(JSONObject schema) {
         this.schema = schema;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }
