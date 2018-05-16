@@ -14,8 +14,8 @@ public class EEGTest {
     public static void initalizeHDFSTest() throws IOException {
         FileUtils.deleteDirectory(new File(TEST_RESULTS_DIRECTORY));
         FileUtils.deleteDirectory(new File(TEST_OUTPUT_DIRECTORY));
-        new File(TEST_RESULTS_DIRECTORY).mkdir();
-        new File(TEST_OUTPUT_DIRECTORY).mkdir();
+        new File(TEST_RESULTS_DIRECTORY).mkdirs();
+        new File(TEST_OUTPUT_DIRECTORY).mkdirs();
         System.setProperty(Const.HADOOP_USER_NAME_KEY,HADOOP_USER_NAME);
         FileSystem fs = FileSystem.get(URI.create(Const.HDFS_URI), Const.HDFS_CONF);
         Path local_file = new Path(LOCAL_TEST_DATA_DIRECTORY);
