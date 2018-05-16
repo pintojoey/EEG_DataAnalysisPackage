@@ -2,6 +2,9 @@ package cz.zcu.kiv.FeatureExtraction;
 
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.Utils.SignalProcessing;
+import cz.zcu.kiv.WorkflowDesigner.Block;
+import cz.zcu.kiv.WorkflowDesigner.Property;
+import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessingResult;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessor;
 import cz.zcu.kiv.eegdsp.main.SignalProcessingFactory;
@@ -10,7 +13,15 @@ import cz.zcu.kiv.eegdsp.wavelet.discrete.WaveletTransformationDiscrete;
 import cz.zcu.kiv.eegdsp.wavelet.discrete.algorithm.wavelets.WaveletDWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.spark.api.java.function.Function;
+
+import java.util.ArrayList;
+
+import static cz.zcu.kiv.WorkflowDesigner.Field.*;
+import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
+import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
 
 
 /***********************************************************************************************************************
@@ -37,7 +48,7 @@ import org.apache.spark.api.java.function.Function;
  * WaveletTransform, 2017/06/11 15:39 Dorian Beganovic
  *
  **********************************************************************************************************************/
-public class WaveletTransform implements IFeatureExtraction {
+public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
     private static Log logger = LogFactory.getLog(WaveletTransform.class);
 
     private static final long serialVersionUID = 7526472295622776147L;
@@ -243,4 +254,19 @@ public class WaveletTransform implements IFeatureExtraction {
         return result;
     }
 
+    @Override
+    public Block intialize() {
+        ArrayList<Property> properties=new ArrayList();
+        properties.add(new Property(NAME_FIELD, STRING, "name",this.NAME,null));
+        properties.add(new Property(EPOCH_SIZE_FIELD, NUMBER, "1",this.EPOCH_SIZE,null));
+        properties.add(new Property(SKIP_SAMPLES_FIELD, NUMBER, "0",this.SKIP_SAMPLES,null));
+        properties.add(new Property(FEATURE_SIZE_FIELD, NUMBER, "1",this.FEATURE_SIZE,null));
+        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION, ONE_TO_ONE,null,null,properties);
+
+    }
+
+    @Override
+    public void generate() {
+
+    }
 }
