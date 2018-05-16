@@ -164,7 +164,7 @@ public class OffLineDataProvider {
             logger.info("Loaded .vdhr file:" + vhdrFile);
             logger.info("Loaded .vmrk file:" + vmrkFile);
 
-            DataTransformer dt = new EEGDataTransformer(Const.HDFS_URI,Const.HDFS_CONF);
+            DataTransformer dt = new HDFSEEGDataTransformer(Const.HDFS_URI,Const.HDFS_CONF);
             List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
 
             logger.debug("Extracting channels");

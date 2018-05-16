@@ -2,6 +2,7 @@ import cz.zcu.kiv.Utils.SparkInitializer;
 import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.Utils.Const;
+import cz.zcu.kiv.signal.HDFSEEGDataTransformer;
 import net.jcip.annotations.NotThreadSafe;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -55,7 +56,7 @@ public class HadoopLoadingTest {
     public void tryRAWEEG() {
         try {
             // instantiate the EEG data transformer
-            DataTransformer transformer = new EEGDataTransformer(Const.HDFS_URI,Const.HDFS_CONF);
+            DataTransformer transformer = new HDFSEEGDataTransformer(Const.HDFS_URI,Const.HDFS_CONF);
 
             // variables which are important to track
             String hdfsvhdrFileLocation;
