@@ -31,7 +31,8 @@ import org.junit.runners.Suite;
         HadoopLoadingTest.class,
         OfflineDataProviderTest.class,
         ClassifierTest.class,
-        PipelineTest.class}
+        PipelineTest.class,
+        WorkflowDesignerTest.class}
 )
 public class TestSuite {
 

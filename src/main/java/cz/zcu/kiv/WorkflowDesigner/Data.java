@@ -34,12 +34,19 @@ public class Data {
     private String type;
     private JSONObject schema;
     private Object value;
+    private String cardinality;
 
-    public Data(String name, String type, Object value, JSONObject schema) {
+    public Data(String name, String type,String cardinality) {
         this.name = name;
         this.type = type;
-        this.value = value;
+        this.cardinality = cardinality;
+    }
+
+    public Data(String name, String type, String cardinality, JSONObject schema) {
+        this.name = name;
+        this.type = type;
         this.schema = schema;
+        this.cardinality = cardinality;
     }
 
     public String getName() {
@@ -72,5 +79,13 @@ public class Data {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    public String getCardinality() {
+        return cardinality;
+    }
+
+    public void setCardinality(String cardinality) {
+        this.cardinality = cardinality;
     }
 }

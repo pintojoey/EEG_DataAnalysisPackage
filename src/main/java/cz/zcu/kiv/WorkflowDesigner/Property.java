@@ -35,18 +35,16 @@ public class Property {
     private Object value;
     private JSONObject schema;
 
-    public Property(String name, String type, String defaultValue, Object value) {
+    public Property(String name, String type, String defaultValue) {
         this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;
-        this.value = value;
         this.schema = null;
     }
-    public Property(String name, String type, String defaultValue, Object value, JSONObject schema) {
+    public Property(String name, String type, String defaultValue, JSONObject schema) {
         this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;
-        this.value = value;
         this.schema = schema;
     }
 

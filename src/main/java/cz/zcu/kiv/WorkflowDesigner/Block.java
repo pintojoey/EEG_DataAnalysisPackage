@@ -1,6 +1,10 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 /***********************************************************************************************************************
  *
  * This file is part of the EEG_Analysis project
@@ -31,18 +35,20 @@ import java.util.ArrayList;
 public class Block {
     private String name;
     private String family;
-    private String cardinality;
-    private Object input;
-    private Object output;
-    private ArrayList<Property> properties;
+    private Data input;
+    private Data output;
+    private HashMap<String,Property> properties;
 
-    public Block(String name, String family, String cardinality, Object input, Object output, ArrayList<Property> properties) {
+    public Block(String name, String family, Data input, Data output, HashMap<String,Property> properties) {
         this.name = name;
         this.family = family;
-        this.cardinality = cardinality;
+        this.properties = properties;
         this.input = input;
         this.output = output;
-        this.properties = properties;
+    }
+
+    public Block(String JSONObject){
+
     }
 
     public String getName() {
@@ -61,35 +67,92 @@ public class Block {
         this.family = family;
     }
 
-    public ArrayList<Property> getProperties() {
+    public String toJS() {
+        String js="blocks.register("+this.toJSON().toString()+");";
+        return js;
+    }
+
+    /**
+     * {
+     *     name: "WaveletTransform",
+     *     family: "Signals",
+     *     fields: [
+     *         {
+     *             name: "Input",
+     *             type: "data",
+     *             defaultValue: "",
+     *             attrs: "input_value"
+     *         },
+     *                {
+     *             name: "Label",
+     *             attrs: "editable",
+     *             type: "string",
+     * 			defaultValue: "WT parameter"
+     *         },
+     *         {
+     *             name: "Output",
+     *             attrs: "output_value",
+     * 			type: "data"
+     *         }
+     *     ]
+     * }
+     * @return
+     */
+    public JSONObject toJSON(){
+        JSONObject blockjs=new JSONObject();
+        blockjs.put("name",getName());
+        blockjs.put("family", getFamily());
+        JSONArray fields=new JSONArray();
+        for(String key:properties.keySet()){
+            Property property=properties.get(key);
+            JSONObject field=new JSONObject();
+            field.put("name",property.getName());
+            field.put("type",property.getType());
+            field.put("defaultValue",property.getDefaultValue());
+            field.put("attrs","editable");
+            fields.put(field);
+        }
+
+        JSONObject input_obj=new JSONObject();
+        input_obj.put("name",input.getName());
+        input_obj.put("type",input.getType());
+        input_obj.put("attrs","input");
+        input_obj.put("card",input.getCardinality());
+        fields.put(input_obj);
+
+        JSONObject output_obj=new JSONObject();
+        output_obj.put("name",output.getName());
+        output_obj.put("type",output.getType());
+        output_obj.put("attrs","output");
+        output_obj.put("card",output.getCardinality());
+        fields.put(output_obj);
+        blockjs.put("fields",fields);
+
+        return blockjs;
+    }
+
+    public HashMap<String, Property> getProperties() {
         return properties;
     }
 
-    public void setProperties(ArrayList<Property> properties) {
+    public void setProperties(HashMap<String, Property> properties) {
         this.properties = properties;
     }
 
-    public String getCardinality() {
-        return cardinality;
-    }
 
-    public void setCardinality(String cardinality) {
-        this.cardinality = cardinality;
-    }
-
-    public Object getInput() {
+    public Data getInput() {
         return input;
     }
 
-    public void setInput(Object input) {
+    public void setInput(Data input) {
         this.input = input;
     }
 
-    public Object getOutput() {
+    public Data getOutput() {
         return output;
     }
 
-    public void setOutput(Object output) {
+    public void setOutput(Data output) {
         this.output = output;
     }
 }

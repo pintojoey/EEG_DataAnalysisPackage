@@ -2,9 +2,7 @@ package cz.zcu.kiv.FeatureExtraction;
 
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.Utils.SignalProcessing;
-import cz.zcu.kiv.WorkflowDesigner.Block;
-import cz.zcu.kiv.WorkflowDesigner.Property;
-import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
+import cz.zcu.kiv.WorkflowDesigner.*;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessingResult;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessor;
 import cz.zcu.kiv.eegdsp.main.SignalProcessingFactory;
@@ -14,13 +12,15 @@ import cz.zcu.kiv.eegdsp.wavelet.discrete.algorithm.wavelets.WaveletDWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_INPUT;
+import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_OUTPUT;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.SIGNAL;
 import static cz.zcu.kiv.WorkflowDesigner.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
-import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.NONE_TO_MANY;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
 
 
@@ -254,19 +254,33 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
         return result;
     }
 
+
+
     @Override
-    public Block intialize() {
-        ArrayList<Property> properties=new ArrayList();
-        properties.add(new Property(NAME_FIELD, STRING, "name",this.NAME,null));
-        properties.add(new Property(EPOCH_SIZE_FIELD, NUMBER, "1",this.EPOCH_SIZE,null));
-        properties.add(new Property(SKIP_SAMPLES_FIELD, NUMBER, "0",this.SKIP_SAMPLES,null));
-        properties.add(new Property(FEATURE_SIZE_FIELD, NUMBER, "1",this.FEATURE_SIZE,null));
-        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION, ONE_TO_ONE,null,null,properties);
+    public Block initialize() {
+
+        HashMap<String,Property>properties=new HashMap<>();
+        properties.put(NAME_FIELD,new Property(NAME_FIELD, NUMBER, "name"));
+        properties.put(EPOCH_SIZE_FIELD,new Property(EPOCH_SIZE_FIELD, NUMBER, "1"));
+        properties.put(SKIP_SAMPLES_FIELD,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
+        properties.put(FEATURE_SIZE_FIELD,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
+        Data input=new Data(SIGNAL_INPUT,SIGNAL, NONE_TO_MANY);
+        Data output=new Data(SIGNAL_OUTPUT,SIGNAL, NONE_TO_MANY);
+        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION,input,output, properties);
 
     }
 
     @Override
-    public void generate() {
-
+    public Block getBlock(){
+        Block block=initialize();
+        HashMap<String,Property>properties=block.getProperties();
+        properties.get(NAME_FIELD).setName(String.valueOf(this.NAME));
+        properties.get(EPOCH_SIZE_FIELD).setName(String.valueOf(this.EPOCH_SIZE));
+        properties.get(SKIP_SAMPLES_FIELD).setName(String.valueOf(this.SKIP_SAMPLES));
+        properties.get(FEATURE_SIZE_FIELD).setName(String.valueOf(this.FEATURE_SIZE));
+        return block;
     }
+
+
+
 }
