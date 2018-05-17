@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import static cz.zcu.kiv.WorkflowDesigner.DataField.FEATURE_EXTRACTOR_INPUT;
 import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_INPUT;
 import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_OUTPUT;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
@@ -35,9 +36,8 @@ import static cz.zcu.kiv.WorkflowDesigner.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Field.FEATURE_SIZE_FIELD;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.SVM_CLASSIFIER;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.NONE_TO_MANY;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
 
 /***********************************************************************************************************************
@@ -184,8 +184,13 @@ public class SVMClassifier implements IClassifier,WorkflowLogic {
         properties.put(REG_PARAMETERS,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
         properties.put(MINI_BATCH_FRACTION,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
 
-        Data input=new Data(SIGNAL_INPUT,FEATURE_EXTRACTOR, NONE_TO_MANY);
-        Data output=new Data(SIGNAL_OUTPUT,MODEL, NONE_TO_MANY);
+        HashMap<String,Data>input=new HashMap<>();
+        input.put(SIGNAL_INPUT,new Data(SIGNAL_INPUT,SIGNAL, ONE_TO_ONE));
+        input.put(FEATURE_EXTRACTOR_INPUT,new Data(FEATURE_EXTRACTOR_INPUT,FEATURE_EXTRACTOR, ONE_TO_ONE));
+
+        HashMap<String,Data>output=new HashMap<>();
+        output.put(SIGNAL_OUTPUT, new Data(SIGNAL_OUTPUT,MODEL, ONE_TO_MANY));
+
         return new Block(SVM_CLASSIFIER,MACHINE_LEARNING,input,output, properties);
     }
 

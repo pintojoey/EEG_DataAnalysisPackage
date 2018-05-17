@@ -35,11 +35,11 @@ import java.util.HashMap;
 public class Block {
     private String name;
     private String family;
-    private Data input;
-    private Data output;
+    private HashMap<String, Data> input;
+    private HashMap<String, Data> output;
     private HashMap<String,Property> properties;
 
-    public Block(String name, String family, Data input, Data output, HashMap<String,Property> properties) {
+    public Block(String name, String family, HashMap<String, Data> input, HashMap<String, Data> output, HashMap<String,Property> properties) {
         this.name = name;
         this.family = family;
         this.properties = properties;
@@ -72,32 +72,6 @@ public class Block {
         return js;
     }
 
-    /**
-     * {
-     *     name: "WaveletTransform",
-     *     family: "Signals",
-     *     fields: [
-     *         {
-     *             name: "Input",
-     *             type: "data",
-     *             defaultValue: "",
-     *             attrs: "input_value"
-     *         },
-     *                {
-     *             name: "Label",
-     *             attrs: "editable",
-     *             type: "string",
-     * 			defaultValue: "WT parameter"
-     *         },
-     *         {
-     *             name: "Output",
-     *             attrs: "output_value",
-     * 			type: "data"
-     *         }
-     *     ]
-     * }
-     * @return
-     */
     public JSONObject toJSON(){
         JSONObject blockjs=new JSONObject();
         blockjs.put("name",getName());
@@ -113,24 +87,31 @@ public class Block {
             fields.put(field);
         }
 
-        if(input!=null) {
-            JSONObject input_obj = new JSONObject();
-            input_obj.put("name", input.getName());
-            input_obj.put("type", input.getType());
-            input_obj.put("attrs", "input");
-            input_obj.put("card", input.getCardinality());
-            fields.put(input_obj);
+        if(input!=null && input.size()!=0) {
+            for(String input_param:input.keySet()) {
+                Data input_value=input.get(input_param);
+                JSONObject input_obj = new JSONObject();
+                input_obj.put("name", input_value.getName());
+                input_obj.put("type", input_value.getType());
+                input_obj.put("attrs", "input");
+                input_obj.put("card", input_value.getCardinality());
+                fields.put(input_obj);
+            }
         }
 
-        if(output!=null) {
-            JSONObject output_obj = new JSONObject();
-            output_obj.put("name", output.getName());
-            output_obj.put("type", output.getType());
-            output_obj.put("attrs", "output");
-            output_obj.put("card", output.getCardinality());
-            fields.put(output_obj);
-            blockjs.put("fields", fields);
+        if(output!=null && output.size()!=0) {
+            for(String output_param:output.keySet()){
+                Data output_value=output.get(output_param);
+                JSONObject output_obj = new JSONObject();
+                output_obj.put("name", output_value.getName());
+                output_obj.put("type", output_value.getType());
+                output_obj.put("attrs", "output");
+                output_obj.put("card", output_value.getCardinality());
+                fields.put(output_obj);
+            }
         }
+        blockjs.put("fields", fields);
+
         return blockjs;
     }
 
@@ -142,20 +123,19 @@ public class Block {
         this.properties = properties;
     }
 
-
-    public Data getInput() {
+    public HashMap<String, Data> getInput() {
         return input;
     }
 
-    public void setInput(Data input) {
+    public void setInput(HashMap<String, Data> input) {
         this.input = input;
     }
 
-    public Data getOutput() {
+    public HashMap<String, Data> getOutput() {
         return output;
     }
 
-    public void setOutput(Data output) {
+    public void setOutput(HashMap<String, Data> output) {
         this.output = output;
     }
 }

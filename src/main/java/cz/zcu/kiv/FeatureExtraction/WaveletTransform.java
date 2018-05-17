@@ -14,14 +14,14 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.HashMap;
 
-import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_INPUT;
-import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_OUTPUT;
+import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.SIGNAL;
 import static cz.zcu.kiv.WorkflowDesigner.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.NONE_TO_MANY;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
 
 
@@ -259,14 +259,16 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
 
     @Override
     public Block initialize() {
-        HashMap<String,Property>properties=new HashMap<>();
+        HashMap<String,Property>properties = new HashMap<>();
         properties.put(NAME_FIELD,new Property(NAME_FIELD, NUMBER, "name"));
         properties.put(EPOCH_SIZE_FIELD,new Property(EPOCH_SIZE_FIELD, NUMBER, "1"));
         properties.put(SKIP_SAMPLES_FIELD,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
         properties.put(FEATURE_SIZE_FIELD,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
-        Data input=new Data(SIGNAL_INPUT,SIGNAL, NONE_TO_MANY);
-        Data output=new Data(SIGNAL_OUTPUT,FEATURE_EXTRACTOR, NONE_TO_MANY);
-        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION,input,output, properties);
+
+        HashMap<String,Data>output=new HashMap<>();
+        output.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_MANY));
+
+        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION,null,output, properties);
 
     }
 
