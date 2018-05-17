@@ -3,6 +3,10 @@ package cz.zcu.kiv.Classification;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
 import cz.zcu.kiv.Utils.SparkInitializer;
+import cz.zcu.kiv.WorkflowDesigner.Block;
+import cz.zcu.kiv.WorkflowDesigner.Data;
+import cz.zcu.kiv.WorkflowDesigner.Property;
+import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +25,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_INPUT;
+import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_OUTPUT;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.MODEL;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.SIGNAL;
+import static cz.zcu.kiv.WorkflowDesigner.Field.*;
+import static cz.zcu.kiv.WorkflowDesigner.Field.FEATURE_SIZE_FIELD;
+import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.SVM_CLASSIFIER;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.NONE_TO_MANY;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
 
 /***********************************************************************************************************************
  *
@@ -46,7 +64,7 @@ import java.util.List;
  * SVMClassifier, 2017/06/27 12:13 Dorian Beganovic
  *
  **********************************************************************************************************************/
-public class SVMClassifier implements IClassifier {
+public class SVMClassifier implements IClassifier,WorkflowLogic {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
     private static IFeatureExtraction fe;
@@ -155,5 +173,24 @@ public class SVMClassifier implements IClassifier {
     @Override
     public void setConfig(HashMap<String, String> config) {
         this.config = config;
+    }
+
+    @Override
+    public Block initialize() {
+        HashMap<String,Property>properties=new HashMap<>();
+
+        properties.put(ITERATIONS_FIELD,new Property(NAME_FIELD, NUMBER, "name"));
+        properties.put(STEP_SIZE,new Property(EPOCH_SIZE_FIELD, NUMBER, "1"));
+        properties.put(REG_PARAMETERS,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
+        properties.put(MINI_BATCH_FRACTION,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
+
+        Data input=new Data(SIGNAL_INPUT,FEATURE_EXTRACTOR, NONE_TO_MANY);
+        Data output=new Data(SIGNAL_OUTPUT,MODEL, NONE_TO_MANY);
+        return new Block(SVM_CLASSIFIER,MACHINE_LEARNING,input,output, properties);
+    }
+
+    @Override
+    public Block getBlock() {
+        return null;
     }
 }

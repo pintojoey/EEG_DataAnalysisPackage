@@ -113,21 +113,24 @@ public class Block {
             fields.put(field);
         }
 
-        JSONObject input_obj=new JSONObject();
-        input_obj.put("name",input.getName());
-        input_obj.put("type",input.getType());
-        input_obj.put("attrs","input");
-        input_obj.put("card",input.getCardinality());
-        fields.put(input_obj);
+        if(input!=null) {
+            JSONObject input_obj = new JSONObject();
+            input_obj.put("name", input.getName());
+            input_obj.put("type", input.getType());
+            input_obj.put("attrs", "input");
+            input_obj.put("card", input.getCardinality());
+            fields.put(input_obj);
+        }
 
-        JSONObject output_obj=new JSONObject();
-        output_obj.put("name",output.getName());
-        output_obj.put("type",output.getType());
-        output_obj.put("attrs","output");
-        output_obj.put("card",output.getCardinality());
-        fields.put(output_obj);
-        blockjs.put("fields",fields);
-
+        if(output!=null) {
+            JSONObject output_obj = new JSONObject();
+            output_obj.put("name", output.getName());
+            output_obj.put("type", output.getType());
+            output_obj.put("attrs", "output");
+            output_obj.put("card", output.getCardinality());
+            fields.put(output_obj);
+            blockjs.put("fields", fields);
+        }
         return blockjs;
     }
 

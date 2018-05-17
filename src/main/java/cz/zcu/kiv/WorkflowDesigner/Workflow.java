@@ -14,6 +14,7 @@ public class Workflow {
 
     public static void initializeBlocks(ArrayList<Block> blocks) throws IOException {
         String blocks_folder=WORKFLOW_DESIGNER_DIRECTORY +File.separator+BLOCK_DEFINTION_DIRECTORY;
+        FileUtils.deleteDirectory(new File(blocks_folder));
         new File(blocks_folder).mkdirs();
         FileUtils.writeStringToFile(new File(WORKFLOW_DESIGNER_DIRECTORY +WORKFLOW_BLOCKS_FILE),
                 "function include(file) {\n" +

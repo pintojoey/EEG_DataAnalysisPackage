@@ -1,5 +1,9 @@
 package cz.zcu.kiv.DataTransformation;
 
+import cz.zcu.kiv.WorkflowDesigner.Block;
+import cz.zcu.kiv.WorkflowDesigner.Data;
+import cz.zcu.kiv.WorkflowDesigner.Property;
+import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
 import cz.zcu.kiv.signal.*;
 import cz.zcu.kiv.Utils.*;
 import org.apache.commons.logging.Log;
@@ -13,6 +17,15 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.ByteOrder;
 import java.util.*;
+
+import static cz.zcu.kiv.WorkflowDesigner.DataField.EEG_DATA_OUTPUT;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.EEG_DATA;
+import static cz.zcu.kiv.WorkflowDesigner.Field.FILE_LOCATION_FIELD;
+import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.INFOTXT_FILE;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.NONE_TO_MANY;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.OFFLINE_DATA_PROVIDER;
 
 /***********************************************************************************************************************
  *
@@ -39,7 +52,7 @@ import java.util.*;
  *
  **********************************************************************************************************************/
 
-public class OffLineDataProvider {
+public class OffLineDataProvider implements WorkflowLogic {
 
     //
     private String vhdrFile;
@@ -78,6 +91,10 @@ public class OffLineDataProvider {
     public OffLineDataProvider(String[] args) throws Exception {
         this.args = args;
         logger.info("Started OffLineDataProvider with arguments" + Arrays.toString(args));
+    }
+
+    public OffLineDataProvider(){
+        //Unused Default Epty Constructor;
     }
 
     /**
@@ -376,5 +393,18 @@ public class OffLineDataProvider {
      */
     public List<Double> getDataLabels(){
         return this.targets;
+    }
+
+    @Override
+    public Block initialize() {
+        HashMap<String,Property>properties=new HashMap<>();
+        properties.put(FILE_LOCATION_FIELD,new Property(FILE_LOCATION_FIELD, STRING, "Not selected"));
+        Data output=new Data(EEG_DATA_OUTPUT,EEG_DATA, ONE_TO_MANY);
+        return new Block(INFOTXT_FILE,OFFLINE_DATA_PROVIDER,null,output, properties);
+    }
+
+    @Override
+    public Block getBlock() {
+        return null;
     }
 }
