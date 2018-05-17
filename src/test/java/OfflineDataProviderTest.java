@@ -1,8 +1,6 @@
 import cz.zcu.kiv.DataTransformation.DataProviderUtils;
 import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
 
-import cz.zcu.kiv.Utils.Const;
-import net.jcip.annotations.NotThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.*;
@@ -10,8 +8,7 @@ import org.junit.*;
 import java.io.IOException;
 import java.util.List;
 
-import static cz.zcu.kiv.Utils.Const.REMOTE_TEST_DATA_DIRECTORY;
-import static cz.zcu.kiv.Utils.Const.TRAINING_FILE;
+import static cz.zcu.kiv.Utils.Const.*;
 
 /***********************************************************************************************************************
  *

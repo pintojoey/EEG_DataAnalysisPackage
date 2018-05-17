@@ -39,6 +39,10 @@ public class Block {
     private HashMap<String, Data> output;
     private HashMap<String,Property> properties;
 
+
+    //Temporary variables
+    private boolean processed=false;
+
     public Block(String name, String family, HashMap<String, Data> input, HashMap<String, Data> output, HashMap<String,Property> properties) {
         this.name = name;
         this.family = family;
@@ -47,7 +51,24 @@ public class Block {
         this.output = output;
     }
 
-    public Block(String JSONObject){
+    public Block(JSONObject blockObject){
+        this.name = blockObject.getString("type");
+
+        Block block = Workflow.getDefinition(this.name);
+        this.family = block.getFamily();
+        this.properties = block.getProperties();
+        this.input = block.getInput();
+        this.output = block.getOutput();
+        if(input==null)processed=true;
+
+        JSONObject values = blockObject.getJSONObject("values");
+        for(String key:this.properties.keySet()){
+            if(blockObject.has(key)){
+                Property property=properties.get(key);
+                property.setValue(property.toValue(values.getString(key)));
+            }
+        }
+
 
     }
 
@@ -137,5 +158,13 @@ public class Block {
 
     public void setOutput(HashMap<String, Data> output) {
         this.output = output;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
     }
 }

@@ -58,7 +58,7 @@ libraries will look like this:
 Then, you'll have to load `blocks.js` and `blocks.css`:
 
 ```html
-<!-- blocks.js -->
+block_definitions
 <script type="text/javascript" src="build/blocks.js"></script> 
 <link rel="stylesheet" type="text/css" href="build/blocks.css" />
 ```
@@ -87,7 +87,7 @@ blocks.register({
     ]
 });
 
-// Running blocks on the div with the name "blocks"
+block_definitions
 blocks.run("#blocks");
 ```
 

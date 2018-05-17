@@ -1,14 +1,6 @@
 import cz.zcu.kiv.Pipeline.PipelineBuilder;
-import cz.zcu.kiv.Utils.Const;
-import net.jcip.annotations.NotThreadSafe;
-import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.junit.*;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import static cz.zcu.kiv.Utils.Const.*;
 
@@ -18,7 +10,7 @@ import static cz.zcu.kiv.Utils.Const.*;
 
  * ==========================================
  *
- * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *

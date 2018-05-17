@@ -1,12 +1,8 @@
 import cz.zcu.kiv.Classification.LogisticRegressionClassifier;
-import cz.zcu.kiv.Classification.NeuralNetworkClassifier;
-import cz.zcu.kiv.Classification.RandomForestClassifier;
-import cz.zcu.kiv.Classification.SVMClassifier;
 import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
-import net.jcip.annotations.NotThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;

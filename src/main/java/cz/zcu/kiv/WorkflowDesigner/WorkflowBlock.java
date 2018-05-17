@@ -22,7 +22,7 @@ package cz.zcu.kiv.WorkflowDesigner;
  *
  * WorkflowBlock, 2018/17/05 6:32 Joey Pinto
  *
- * This class declares constants to be used as names for blocks
+ * This class declares constants to be used as names for block_definitions
  **********************************************************************************************************************/
 public class WorkflowBlock {
     public static final String WAVELET_TRANSFORM = "Wavelet Transform";

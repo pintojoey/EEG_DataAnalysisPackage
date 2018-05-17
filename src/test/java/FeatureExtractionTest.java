@@ -2,7 +2,6 @@ import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import cz.zcu.kiv.Utils.SparkInitializer;
-import net.jcip.annotations.NotThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.JavaRDD;

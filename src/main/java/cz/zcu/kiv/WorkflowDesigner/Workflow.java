@@ -1,5 +1,8 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
+import cz.zcu.kiv.Classification.SVMClassifier;
+import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
+import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -36,6 +39,8 @@ public class Workflow {
     public static String BLOCK_DEFINTION_DIRECTORY ="blocks/";
     public static String WORKFLOW_BLOCKS_FILE="workflow_blocks.js";
 
+    public static ArrayList<Block> block_definitions =new ArrayList<>();
+
     public static void initializeBlocks(ArrayList<Block> blocks) throws IOException {
         String blocks_folder=WORKFLOW_DESIGNER_DIRECTORY +File.separator+BLOCK_DEFINTION_DIRECTORY;
         FileUtils.deleteDirectory(new File(blocks_folder));
@@ -53,5 +58,35 @@ public class Workflow {
                 String include="include('"+BLOCK_DEFINTION_DIRECTORY+block.getFamily()+File.separator+block.getName()+".js');";
                 FileUtils.writeStringToFile(new File(WORKFLOW_DESIGNER_DIRECTORY +WORKFLOW_BLOCKS_FILE),include,true);
         }
+    }
+
+    public static void initializeWorkflow(){
+        if(block_definitions.size()!=0)return;
+
+        Block offline_data=new OffLineDataProvider().initialize();
+        assert offline_data !=null;
+        Block wavelet_transform=new WaveletTransform().initialize();
+        assert wavelet_transform !=null;
+        Block svm_classifier=new SVMClassifier().initialize();
+        assert svm_classifier !=null;
+
+
+        block_definitions.add(offline_data);
+        block_definitions.add(wavelet_transform);
+        block_definitions.add(svm_classifier);
+        try {
+            initializeBlocks(block_definitions);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Block getDefinition(String name){
+        for(Block block:block_definitions){
+            if(block.getName().equals(name)){
+                return block;
+            }
+        }
+        return null;
     }
 }

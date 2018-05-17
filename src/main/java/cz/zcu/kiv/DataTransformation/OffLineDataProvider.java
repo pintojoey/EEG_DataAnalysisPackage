@@ -18,10 +18,8 @@ import java.net.URI;
 import java.nio.ByteOrder;
 import java.util.*;
 
-import static cz.zcu.kiv.WorkflowDesigner.DataField.EEG_DATA_OUTPUT;
-import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_OUTPUT;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.EEG_DATA;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.SIGNAL;
+import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.*;
 import static cz.zcu.kiv.WorkflowDesigner.Field.FILE_LOCATION_FIELD;
 import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.INFOTXT_FILE;
@@ -402,14 +400,15 @@ public class OffLineDataProvider implements WorkflowLogic {
         properties.put(FILE_LOCATION_FIELD,new Property(FILE_LOCATION_FIELD, STRING, "Not selected"));
 
         HashMap<String,Data>output=new HashMap<>();
-        output.put(EEG_DATA_OUTPUT,new Data(EEG_DATA_OUTPUT,EEG_DATA, ONE_TO_MANY));
-        output.put(SIGNAL_OUTPUT,new Data(SIGNAL_OUTPUT,SIGNAL, ONE_TO_MANY));
+        output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
+        output.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_MANY));
 
         return new Block(INFOTXT_FILE,OFFLINE_DATA_PROVIDER,null,output, properties);
     }
 
     @Override
-    public Block getBlock() {
-        return null;
+    public void processBlock(HashMap<String, Block> blocks, HashMap<String, String> source_blocks, HashMap<String, String> source_params) {
+
     }
+    
 }

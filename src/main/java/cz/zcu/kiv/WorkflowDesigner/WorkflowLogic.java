@@ -1,4 +1,8 @@
 package cz.zcu.kiv.WorkflowDesigner;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /***********************************************************************************************************************
  *
  * This file is part of the EEG_Analysis project
@@ -28,6 +32,6 @@ public interface WorkflowLogic {
 
     Block initialize();
 
-    Block getBlock();
+    void processBlock(HashMap<String,Block>blocks,HashMap<String,String>source_blocks,HashMap<String,String>source_params);
 
 }

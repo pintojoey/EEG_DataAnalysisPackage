@@ -3,13 +3,17 @@ package cz.zcu.kiv.WorkflowDesigner;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
+import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
+
 /***********************************************************************************************************************
  *
  * This file is part of the EEG_Analysis project
 
  * ==========================================
  *
- * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *
@@ -24,7 +28,7 @@ import java.util.ArrayList;
  *
  ***********************************************************************************************************************
  *
- * Property, 2018/16/05 13:32 Joey Pinto
+ * Property, 2018/16/05 13:32 Joey
  *
  * This file is a model for the preoperties of the blocks in the workflow designer tool
  **********************************************************************************************************************/
@@ -86,5 +90,16 @@ public class Property {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    public Object toValue(String value) {
+        switch(this.type){
+            case NUMBER:
+                return Double.parseDouble(value);
+            case STRING:
+                return value;
+            default:
+                return value;
+        }
     }
 }

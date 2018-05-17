@@ -13,7 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.mllib.classification.LogisticRegressionWithSGD;
 import org.apache.spark.mllib.classification.SVMModel;
 import org.apache.spark.mllib.classification.SVMWithSGD;
 import org.apache.spark.mllib.evaluation.MulticlassMetrics;
@@ -26,12 +25,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import static cz.zcu.kiv.WorkflowDesigner.DataField.FEATURE_EXTRACTOR_INPUT;
-import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_INPUT;
-import static cz.zcu.kiv.WorkflowDesigner.DataField.SIGNAL_OUTPUT;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.MODEL;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.SIGNAL;
+import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.*;
 import static cz.zcu.kiv.WorkflowDesigner.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Field.FEATURE_SIZE_FIELD;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
@@ -185,17 +180,21 @@ public class SVMClassifier implements IClassifier,WorkflowLogic {
         properties.put(MINI_BATCH_FRACTION,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
 
         HashMap<String,Data>input=new HashMap<>();
-        input.put(SIGNAL_INPUT,new Data(SIGNAL_INPUT,SIGNAL, ONE_TO_ONE));
+        input.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_ONE));
+        input.put(RAW_TARGETS_INPUT,new Data(RAW_TARGETS_INPUT,TARGET_LIST, ONE_TO_ONE));
         input.put(FEATURE_EXTRACTOR_INPUT,new Data(FEATURE_EXTRACTOR_INPUT,FEATURE_EXTRACTOR, ONE_TO_ONE));
 
         HashMap<String,Data>output=new HashMap<>();
-        output.put(SIGNAL_OUTPUT, new Data(SIGNAL_OUTPUT,MODEL, ONE_TO_MANY));
+        output.put(CLASSIFICATION_MODEL_OUTPUT, new Data(CLASSIFICATION_MODEL_OUTPUT,MODEL, ONE_TO_MANY));
+        output.put(CLASSIFICATION_STATISTICS_OUTPUT, new Data(CLASSIFICATION_STATISTICS_OUTPUT,MODEL, ONE_TO_MANY));
 
         return new Block(SVM_CLASSIFIER,MACHINE_LEARNING,input,output, properties);
     }
 
     @Override
-    public Block getBlock() {
-        return null;
+    public void processBlock(HashMap<String, Block> blocks, HashMap<String, String> source_blocks, HashMap<String, String> source_params) {
+
     }
+
+
 }

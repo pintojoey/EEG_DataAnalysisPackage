@@ -1,12 +1,9 @@
 import cz.zcu.kiv.Utils.SparkInitializer;
 import cz.zcu.kiv.signal.DataTransformer;
-import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.signal.HDFSEEGDataTransformer;
-import net.jcip.annotations.NotThreadSafe;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.*;

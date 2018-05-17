@@ -273,15 +273,11 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
     }
 
     @Override
-    public Block getBlock(){
-        Block block=initialize();
-        HashMap<String,Property>properties=block.getProperties();
-        properties.get(NAME_FIELD).setName(String.valueOf(this.NAME));
-        properties.get(EPOCH_SIZE_FIELD).setName(String.valueOf(this.EPOCH_SIZE));
-        properties.get(SKIP_SAMPLES_FIELD).setName(String.valueOf(this.SKIP_SAMPLES));
-        properties.get(FEATURE_SIZE_FIELD).setName(String.valueOf(this.FEATURE_SIZE));
-        return block;
+    public void processBlock(HashMap<String, Block> blocks, HashMap<String, String> source_blocks, HashMap<String, String> source_params) {
+
     }
+
+
 
 
 
