@@ -7,19 +7,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Workflow {
-    public static String BLOCKS_DIRECTORY="Block/";
+
+    public static String WORKFLOW_DESIGNER_DIRECTORY ="workflow_designer/";
+    public static String BLOCK_DEFINTION_DIRECTORY ="blocks/";
     public static String WORKFLOW_BLOCKS_FILE="workflow_blocks.js";
-    public static void initializeBlocks(ArrayList<Block> blocks){
-        new File(BLOCKS_DIRECTORY).mkdir();
+
+    public static void initializeBlocks(ArrayList<Block> blocks) throws IOException {
+        String blocks_folder=WORKFLOW_DESIGNER_DIRECTORY +File.separator+BLOCK_DEFINTION_DIRECTORY;
+        new File(blocks_folder).mkdirs();
+        FileUtils.writeStringToFile(new File(WORKFLOW_DESIGNER_DIRECTORY +WORKFLOW_BLOCKS_FILE),
+                "function include(file) {\n" +
+                        "\t$('head').append('<script type=\"text/javascript\" src=\"'+file+'\"></script>');\n" +
+                        "}\n");
+
         for(Block block:blocks){
-            String filename=BLOCKS_DIRECTORY+block.getFamily()+File.separator+block.getName();
-            try {
+            String filename= blocks_folder + block.getFamily()+File.separator+block.getName()+".js";
+
+
                 FileUtils.writeStringToFile(new File(filename),block.toJS());
-                String include="include('"+block.getFamily()+File.separator+block.getName()+".js');";
-                FileUtils.writeStringToFile(new File(BLOCKS_DIRECTORY+WORKFLOW_BLOCKS_FILE),include,true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                String include="include('"+BLOCK_DEFINTION_DIRECTORY+block.getFamily()+File.separator+block.getName()+".js');";
+                FileUtils.writeStringToFile(new File(WORKFLOW_DESIGNER_DIRECTORY +WORKFLOW_BLOCKS_FILE),include,true);
         }
     }
 }
