@@ -46,7 +46,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
 
  * ==========================================
  *
- * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *

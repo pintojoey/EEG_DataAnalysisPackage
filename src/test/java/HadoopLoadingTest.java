@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
  * ==========================================
  *
- * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *

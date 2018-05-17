@@ -11,7 +11,7 @@ import java.util.HashMap;
 
  * ==========================================
  *
- * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *
@@ -26,7 +26,7 @@ import java.util.HashMap;
  *
  ***********************************************************************************************************************
  *
- * Block, 2018/16/05 13:32 Joey
+ * Block, 2018/16/05 13:32 Joey Pinto
  *
  * This file is the model for a single block in the worklow designer tool
  **********************************************************************************************************************/

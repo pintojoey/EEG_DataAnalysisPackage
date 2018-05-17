@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
  * ==========================================
  *
- * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *
@@ -24,7 +24,7 @@ import java.util.ArrayList;
  *
  ***********************************************************************************************************************
  *
- * Property, 2018/16/05 13:32 Joey
+ * Property, 2018/16/05 13:32 Joey Pinto
  *
  * This file is a model for the preoperties of the blocks in the workflow designer tool
  **********************************************************************************************************************/

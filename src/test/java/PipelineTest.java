@@ -18,7 +18,7 @@ import static cz.zcu.kiv.Utils.Const.*;
 
  * ==========================================
  *
- * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *
@@ -33,7 +33,7 @@ import static cz.zcu.kiv.Utils.Const.*;
  *
  ***********************************************************************************************************************
  *
- * PipelineTest, 2017/07/11 23:11 Dorian Beganovic
+ * PipelineTest, 2017/07/11 23:11 Dorian Beganovic, Joey Pinto
  *
  **********************************************************************************************************************/
 public class PipelineTest{

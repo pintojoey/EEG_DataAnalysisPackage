@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
  * ==========================================
  *
- * Copyright (C) 2017 by University of West Bohemia (http://www.zcu.cz/en/)
+ * Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
  *
  ***********************************************************************************************************************
  *
@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  ***********************************************************************************************************************
  *
- * Data, 2018/16/05 13:32 Joey
+ * Data, 2018/16/05 13:32 Joey Pinto
  *
  * This file is a model for the Data attribute of block which may be input/output in the workflow designer tool
  **********************************************************************************************************************/
