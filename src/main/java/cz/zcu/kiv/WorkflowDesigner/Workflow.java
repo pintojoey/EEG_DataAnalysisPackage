@@ -61,19 +61,6 @@ public class Workflow {
     }
 
     public static void initializeWorkflow(){
-        if(block_definitions.size()!=0)return;
-
-        Block offline_data=new OffLineDataProvider();
-        offline_data.initialize();
-        Block wavelet_transform=new WaveletTransform();
-        wavelet_transform.initialize();
-        Block svm_classifier=new SVMClassifier();
-        svm_classifier.initialize();
-
-
-        block_definitions.add(offline_data);
-        block_definitions.add(wavelet_transform);
-        block_definitions.add(svm_classifier);
         try {
             initializeBlocks(block_definitions);
         } catch (IOException e) {

@@ -3,6 +3,8 @@ package cz.zcu.kiv.FeatureExtraction;
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.Utils.SignalProcessing;
 import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessingResult;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessor;
 import cz.zcu.kiv.eegdsp.main.SignalProcessingFactory;
@@ -48,6 +50,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
  * WaveletTransform, 2017/06/11 15:39 Dorian Beganovic
  *
  **********************************************************************************************************************/
+@BlockType(type=WAVELET_TRANSFORM, family = FEATURE_EXTRACTION)
 public class WaveletTransform extends Block implements IFeatureExtraction {
     private static Log logger = LogFactory.getLog(WaveletTransform.class);
 
@@ -60,6 +63,7 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
     /**
      * Number of samples to be used - Fs = 1000 Hz expected
      */
+    @BlockProperty(name = EPOCH_SIZE_FIELD, type = NUMBER, defaultValue = "1")
     private int EPOCH_SIZE = 512;
 
     /**
@@ -70,16 +74,19 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
     /**
      * Skip initial samples in each epoch
      */
+    @BlockProperty(name = SKIP_SAMPLES_FIELD, type = NUMBER, defaultValue = "0")
     private int SKIP_SAMPLES = 175;
 
     /**
      * Name of the wavelet
      */
+    @BlockProperty(name=NAME_FIELD, type=NUMBER, defaultValue="0")
     private int NAME;
 
     /**
      * Size of feature vector
      */
+    @BlockProperty(name=FEATURE_SIZE_FIELD, type=NUMBER, defaultValue="16")
     private int FEATURE_SIZE = 16;
 
     /**
@@ -270,8 +277,6 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
 
         HashMap<String,Data>output=new HashMap<>();
         output.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_MANY));
-        setName(WAVELET_TRANSFORM);
-        setFamily(FEATURE_EXTRACTION);
         setInput(null);
         setOutput(output);
         setProperties(properties);

@@ -3,6 +3,7 @@ package cz.zcu.kiv.Classification;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
 import cz.zcu.kiv.Utils.SparkInitializer;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.WorkflowDesigner.Data;
 import cz.zcu.kiv.WorkflowDesigner.Property;
@@ -58,6 +59,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
  * SVMClassifier, 2017/06/27 12:13 Dorian Beganovic
  *
  **********************************************************************************************************************/
+@BlockType(type = SVM_CLASSIFIER, family = MACHINE_LEARNING)
 public class SVMClassifier extends Block implements IClassifier {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
@@ -188,8 +190,6 @@ public class SVMClassifier extends Block implements IClassifier {
         output.put(CLASSIFICATION_MODEL_OUTPUT, new Data(CLASSIFICATION_MODEL_OUTPUT,MODEL, ONE_TO_MANY));
         output.put(CLASSIFICATION_STATISTICS_OUTPUT, new Data(CLASSIFICATION_STATISTICS_OUTPUT,MODEL, ONE_TO_MANY));
 
-        setName(SVM_CLASSIFIER);
-        setFamily(MACHINE_LEARNING);
         setInput(input);
         setOutput(output);
         setProperties(properties);

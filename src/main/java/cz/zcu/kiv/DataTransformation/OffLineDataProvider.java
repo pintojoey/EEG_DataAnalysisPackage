@@ -1,6 +1,7 @@
 package cz.zcu.kiv.DataTransformation;
 
 import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.signal.*;
 import cz.zcu.kiv.Utils.*;
 import org.apache.commons.logging.Log;
@@ -47,7 +48,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.OFFLINE_DATA_PROVIDER;
  * OffLineDataProvider, 2017/05/25 22:05 Dorian Beganovic
  *
  **********************************************************************************************************************/
-
+@BlockType(type = INFOTXT_FILE, family = OFFLINE_DATA_PROVIDER)
 public class OffLineDataProvider extends Block {
 
     //
@@ -402,9 +403,7 @@ public class OffLineDataProvider extends Block {
         final HashMap<String,Data>output=new HashMap<>();
         output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
         output.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_MANY));
-
-        setName(INFOTXT_FILE);
-        setFamily(OFFLINE_DATA_PROVIDER);
+        
         setInput(null);
         setOutput(output);
         setProperties(properties);
