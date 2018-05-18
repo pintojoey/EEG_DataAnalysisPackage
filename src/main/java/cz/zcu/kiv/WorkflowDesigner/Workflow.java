@@ -1,5 +1,6 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -9,7 +10,9 @@ import org.reflections.Reflections;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -151,14 +154,18 @@ public class Workflow {
                 if (block_object.getString("type").equals(block_type_name)){
                     try {
                         block = (Block) block_type.newInstance();
+                        break;
                     } catch (InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
             }
             //Initialize the block I/O and configutations
-            //@TODO Elimiate this call
+            //@TODO Eliminate this call
             block.initialize();
+
+
+
 
             //Intitalize values from the JSONObject
             block.fromJSON(block_object);

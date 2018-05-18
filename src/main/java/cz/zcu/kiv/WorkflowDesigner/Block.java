@@ -1,8 +1,12 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /***********************************************************************************************************************
@@ -199,6 +203,25 @@ public class Block {
     }
 
     public void initialize(){
+        if(getProperties()==null)
+        setProperties(new HashMap<String,Property>());
+
+        for (Method f: getClass().getDeclaredMethods()) {
+            BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
+            if (blockProperty != null){
+                try {
+                    System.out.println(f.getName());
+                    Object value = f.invoke(this);
+                    System.out.println(f.getName());
+                    properties.put(blockProperty.name(),new Property(blockProperty.name(),blockProperty.type(),blockProperty.defaultValue()));
+                    getProperties().get(blockProperty.name()).setValue(value);
+                } catch ( IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
 
     }
 

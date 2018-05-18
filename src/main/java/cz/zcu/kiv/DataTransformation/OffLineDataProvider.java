@@ -1,6 +1,7 @@
 package cz.zcu.kiv.DataTransformation;
 
 import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.signal.*;
 import cz.zcu.kiv.Utils.*;
@@ -74,6 +75,8 @@ public class OffLineDataProvider extends Block {
     private static Log logger = LogFactory.getLog(OffLineDataProvider.class);
 
 
+    private String FILE_LOCATION;
+
     private String[] args;
     /**
      *
@@ -131,6 +134,7 @@ public class OffLineDataProvider extends Block {
         }
         else {
             String fileLocation = args[0];
+            if(this.FILE_LOCATION!=null)fileLocation=FILE_LOCATION;
             // .EEG
             if (fileLocation.substring(fileLocation.length() - 4).equals(".eeg")){ // in this case we have a .eeg file
                 logger.info("Input file is .eeg file with location " + fileLocation);
@@ -397,8 +401,8 @@ public class OffLineDataProvider extends Block {
 
     @Override
     public void initialize() {
-        HashMap<String,Property>properties=new HashMap<>();
-        properties.put(FILE_LOCATION_FIELD,new Property(FILE_LOCATION_FIELD, STRING, "Not selected"));
+        super.initialize();
+
 
         final HashMap<String,Data>output=new HashMap<>();
         output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
@@ -406,7 +410,7 @@ public class OffLineDataProvider extends Block {
 
         setInput(null);
         setOutput(output);
-        setProperties(properties);
+
     }
 
     @Override
@@ -424,7 +428,12 @@ public class OffLineDataProvider extends Block {
         }
     }
 
+    @BlockProperty(name = FILE_LOCATION_FIELD, type = STRING , defaultValue = "Not Selected")
+    public String getFILE_LOCATION() {
+        return FILE_LOCATION;
+    }
 
-
-
+    public void setFILE_LOCATION(String FILE_LOCATION) {
+        this.FILE_LOCATION = FILE_LOCATION;
+    }
 }

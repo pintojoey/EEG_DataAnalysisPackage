@@ -63,7 +63,7 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
     /**
      * Number of samples to be used - Fs = 1000 Hz expected
      */
-    @BlockProperty(name = EPOCH_SIZE_FIELD, type = NUMBER, defaultValue = "1")
+
     private int EPOCH_SIZE = 512;
 
     /**
@@ -74,19 +74,17 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
     /**
      * Skip initial samples in each epoch
      */
-    @BlockProperty(name = SKIP_SAMPLES_FIELD, type = NUMBER, defaultValue = "0")
     private int SKIP_SAMPLES = 175;
 
     /**
      * Name of the wavelet
      */
-    @BlockProperty(name=NAME_FIELD, type=NUMBER, defaultValue="0")
     private int NAME;
 
     /**
      * Size of feature vector
      */
-    @BlockProperty(name=FEATURE_SIZE_FIELD, type=NUMBER, defaultValue="16")
+
     private int FEATURE_SIZE = 16;
 
     /**
@@ -269,17 +267,12 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
 
     @Override
     public void initialize() {
-        HashMap<String,Property>properties = new HashMap<>();
-        properties.put(NAME_FIELD,new Property(NAME_FIELD, NUMBER, "name"));
-        properties.put(EPOCH_SIZE_FIELD,new Property(EPOCH_SIZE_FIELD, NUMBER, "1"));
-        properties.put(SKIP_SAMPLES_FIELD,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
-        properties.put(FEATURE_SIZE_FIELD,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
+        super.initialize();
 
         HashMap<String,Data>output=new HashMap<>();
         output.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_MANY));
         setInput(null);
         setOutput(output);
-        setProperties(properties);
     }
 
     @Override
@@ -289,5 +282,47 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
         setProcessed(true);
     }
 
+    public static int[] getCHANNELS() {
+        return CHANNELS;
+    }
 
+    @BlockProperty(name = EPOCH_SIZE_FIELD, type = NUMBER, defaultValue = "1")
+    public int getEPOCH_SIZE() {
+        return EPOCH_SIZE;
+    }
+
+    public void setEPOCH_SIZE(int EPOCH_SIZE) {
+        this.EPOCH_SIZE = EPOCH_SIZE;
+    }
+
+    public static int getDownSmplFactor() {
+        return DOWN_SMPL_FACTOR;
+    }
+
+    @BlockProperty(name = SKIP_SAMPLES_FIELD, type = NUMBER, defaultValue = "0")
+    public int getSKIP_SAMPLES() {
+        return SKIP_SAMPLES;
+    }
+
+    public void setSKIP_SAMPLES(int SKIP_SAMPLES) {
+        this.SKIP_SAMPLES = SKIP_SAMPLES;
+    }
+
+    @BlockProperty(name=NAME_FIELD, type=NUMBER, defaultValue="0")
+    public int getNAME() {
+        return NAME;
+    }
+
+    public void setNAME(int NAME) {
+        this.NAME = NAME;
+    }
+
+    @BlockProperty(name=FEATURE_SIZE_FIELD, type=NUMBER, defaultValue="16")
+    public int getFEATURE_SIZE() {
+        return FEATURE_SIZE;
+    }
+
+    public void setFEATURE_SIZE(int FEATURE_SIZE) {
+        this.FEATURE_SIZE = FEATURE_SIZE;
+    }
 }

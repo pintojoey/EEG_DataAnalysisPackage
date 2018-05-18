@@ -67,6 +67,12 @@ public class SVMClassifier extends Block implements IClassifier {
     private static SVMModel model;
     private HashMap<String,String> config;
 
+
+    private int ITERATIONS;
+    private int STEP_SIZE;
+    private double REG_PARAMETERS;
+    private double MINI_BATCH_FRACTION;
+
     private static Function<double[][], double[]> featureExtractionFunc = new Function<double[][], double[]>() {
         public double[] call(double[][] epoch) {
             return fe.extractFeatures(epoch);
@@ -174,12 +180,9 @@ public class SVMClassifier extends Block implements IClassifier {
 
     @Override
     public void initialize() {
-        HashMap<String,Property>properties=new HashMap<>();
+        super.initialize();
 
-        properties.put(ITERATIONS_FIELD,new Property(ITERATIONS_FIELD, NUMBER, "name"));
-        properties.put(STEP_SIZE,new Property(STEP_SIZE, NUMBER, "1"));
-        properties.put(REG_PARAMETERS,new Property(REG_PARAMETERS, NUMBER, "0"));
-        properties.put(MINI_BATCH_FRACTION,new Property(MINI_BATCH_FRACTION, NUMBER, "1"));
+
 
         final HashMap<String,Data>input=new HashMap<>();
         input.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_ONE));
@@ -192,7 +195,6 @@ public class SVMClassifier extends Block implements IClassifier {
 
         setInput(input);
         setOutput(output);
-        setProperties(properties);
     }
 
     @Override
@@ -201,16 +203,45 @@ public class SVMClassifier extends Block implements IClassifier {
         List<double[][]> epochs = (List<double[][]>) getInput().get(RAW_EPOCHS_OUTPUT).getValue();
         List<Double>targets = (List<Double>) getInput().get(RAW_TARGETS_OUTPUT).getValue();
         this.config=new HashMap<>();
-        config.put("config_num_iterations",String.valueOf(getProperties().get(ITERATIONS_FIELD).asInt()));
-        config.put("config_step_size",getProperties().get(STEP_SIZE).asString());
-        config.put("config_reg_param",getProperties().get(REG_PARAMETERS).asString());
-        config.put("config_mini_batch_fraction",getProperties().get(MINI_BATCH_FRACTION).asString());
+        config.put("config_num_iterations",String.valueOf(ITERATIONS));
+        config.put("config_step_size",String.valueOf(STEP_SIZE));
+        config.put("config_reg_param",String.valueOf(REG_PARAMETERS));
+        config.put("config_mini_batch_fraction",String.valueOf(MINI_BATCH_FRACTION));
         train(epochs, targets, getFeatureExtraction());
 
         getOutput().get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
     }
 
 
+    public int getITERATIONS() {
+        return ITERATIONS;
+    }
 
+    public void setITERATIONS(int ITERATIONS) {
+        this.ITERATIONS = ITERATIONS;
+    }
 
+    public int getSTEP_SIZE() {
+        return STEP_SIZE;
+    }
+
+    public void setSTEP_SIZE(int STEP_SIZE) {
+        this.STEP_SIZE = STEP_SIZE;
+    }
+
+    public double getREG_PARAMETERS() {
+        return REG_PARAMETERS;
+    }
+
+    public void setREG_PARAMETERS(double REG_PARAMETERS) {
+        this.REG_PARAMETERS = REG_PARAMETERS;
+    }
+
+    public double getMINI_BATCH_FRACTION() {
+        return MINI_BATCH_FRACTION;
+    }
+
+    public void setMINI_BATCH_FRACTION(double MINI_BATCH_FRACTION) {
+        this.MINI_BATCH_FRACTION = MINI_BATCH_FRACTION;
+    }
 }
