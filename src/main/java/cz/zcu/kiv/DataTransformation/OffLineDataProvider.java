@@ -1,6 +1,7 @@
 package cz.zcu.kiv.DataTransformation;
 
 import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.signal.*;
@@ -64,8 +65,12 @@ public class OffLineDataProvider extends Block {
     private Map<String, Integer> files = new LinkedHashMap<>();
     private FileSystem fs;
     //
+    @BlockOutput(name = RAW_EPOCHS_OUTPUT , type = EPOCH_LIST , cardinality = ONE_TO_MANY)
     private List<double[][]> epochs = new ArrayList<>();
+
+    @BlockOutput(name = RAW_TARGETS_OUTPUT , type = TARGET_LIST , cardinality = ONE_TO_MANY)
     private List<Double> targets = new ArrayList<>();
+
     private int numberOfTargets = 0;
     private int numberOfNonTargets = 0;
     private int epochsCounter = 0;
@@ -394,23 +399,6 @@ public class OffLineDataProvider extends Block {
      */
     public List<Double> getDataLabels(){
         return this.targets;
-    }
-
-
-
-
-    @Override
-    public void initialize() {
-        super.initialize();
-
-
-        final HashMap<String,Data>output=new HashMap<>();
-        output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
-        output.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_MANY));
-
-        setInput(null);
-        setOutput(output);
-
     }
 
     @Override

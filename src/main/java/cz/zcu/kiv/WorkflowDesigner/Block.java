@@ -1,6 +1,7 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockInput;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -206,6 +207,8 @@ public class Block {
         setProperties(new HashMap<String,Property>());
         if(getInput()==null)
         setInput(new HashMap<String, Data>());
+        if(getOutput()==null)
+            setOutput(new HashMap<String, Data>());
 
         for (Field f: getClass().getDeclaredFields()) {
             f.setAccessible(true);
@@ -227,6 +230,17 @@ public class Block {
                     Object value = f.get(this);
                     input.put(blockInput.name(),new Data(blockInput.name(),blockInput.type(),blockInput.cardinality()));
                     getInput().get(blockInput.name()).setValue(value);
+                } catch ( IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            BlockOutput blockOutput = f.getAnnotation(BlockOutput.class);
+            if (blockOutput != null){
+                try {
+                    Object value = f.get(this);
+                    output.put(blockOutput.name(),new Data(blockOutput.name(),blockOutput.type(),blockOutput.cardinality()));
+                    getOutput().get(blockOutput.name()).setValue(value);
                 } catch ( IllegalAccessException e) {
                     e.printStackTrace();
                 }

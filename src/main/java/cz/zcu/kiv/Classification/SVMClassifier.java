@@ -4,6 +4,7 @@ import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
 import cz.zcu.kiv.Utils.SparkInitializer;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockInput;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.WorkflowDesigner.Block;
@@ -68,7 +69,9 @@ public class SVMClassifier extends Block implements IClassifier {
     @BlockInput( name = FEATURE_EXTRACTOR_OUTPUT, type = FEATURE_EXTRACTOR , cardinality = ONE_TO_ONE)
     private static IFeatureExtraction fe;
 
+    @BlockOutput( name =CLASSIFICATION_MODEL_OUTPUT, type = CLASSIFCATION_MODEL, cardinality = ONE_TO_MANY)
     private static SVMModel model;
+
     private HashMap<String,String> config;
 
     @BlockProperty(name = ITERATIONS_FIELD, type = NUMBER , defaultValue = "10")
@@ -192,17 +195,6 @@ public class SVMClassifier extends Block implements IClassifier {
     @Override
     public void setConfig(HashMap<String, String> config) {
         this.config = config;
-    }
-
-
-    @Override
-    public void initialize() {
-        super.initialize();
-
-        final HashMap<String,Data>output=new HashMap<>();
-        output.put(CLASSIFICATION_MODEL_OUTPUT, new Data(CLASSIFICATION_MODEL_OUTPUT,MODEL, ONE_TO_MANY));
-        output.put(CLASSIFICATION_STATISTICS_OUTPUT, new Data(CLASSIFICATION_STATISTICS_OUTPUT,MODEL, ONE_TO_MANY));
-        setOutput(output);
     }
 
     @Override

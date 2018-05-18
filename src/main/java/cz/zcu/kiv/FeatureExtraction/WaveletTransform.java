@@ -3,6 +3,7 @@ package cz.zcu.kiv.FeatureExtraction;
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.Utils.SignalProcessing;
 import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessingResult;
@@ -261,21 +262,12 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
         return result;
     }
 
+    @BlockOutput(name = FEATURE_EXTRACTOR_OUTPUT , type = FEATURE_EXTRACTOR , cardinality = ONE_TO_MANY)
     private Function<double[][], double[]> featureExtractionFunc = new Function<double[][], double[]>() {
         public double[] call(double[][] epoch) {
             return extractFeatures(epoch);
         }
     };
-
-    @Override
-    public void initialize() {
-        super.initialize();
-
-        HashMap<String,Data>output=new HashMap<>();
-        output.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_MANY));
-        setInput(null);
-        setOutput(output);
-    }
 
     @Override
     public void process() {
