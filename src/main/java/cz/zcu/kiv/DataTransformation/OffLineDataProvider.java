@@ -403,7 +403,7 @@ public class OffLineDataProvider extends Block {
         final HashMap<String,Data>output=new HashMap<>();
         output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
         output.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_MANY));
-        
+
         setInput(null);
         setOutput(output);
         setProperties(properties);

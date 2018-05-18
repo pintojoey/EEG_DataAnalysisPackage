@@ -61,12 +61,9 @@ public class Block {
         this.output = block.getOutput();
 
         JSONObject values = blockObject.getJSONObject("values");
-        System.out.println(values);
-        System.out.println(this.properties.keySet());
         for(String key:this.properties.keySet()){
             if(values.has(key.toLowerCase())){
                 Property property=properties.get(key);
-                System.out.println(key);
                 property.setValue(property.toValue(values.getString(key.toLowerCase())));
             }
         }
@@ -145,23 +142,17 @@ public class Block {
 
     public void processBlock(HashMap<Integer, Block> blocks, HashMap<String, Integer> source_blocks, HashMap<String, String> source_params){
         if(getInput()!=null&&getInput().size()>0) {
-            System.out.println(getInput().keySet());
-            System.out.println(source_blocks.keySet());
             for (String key : getInput().keySet()) {
-                System.out.println(key);
                 Data destination_data=getInput().get(key);
 
-                HashMap<String, Data> source = blocks.get(source_blocks.get(key.toLowerCase()))
-                        .getOutput();
+                HashMap<String, Data> source = blocks.get(source_blocks.get(key.toLowerCase())).getOutput();
                 Data source_data=null;
 
-                System.out.println(source.keySet());
                 for(String source_key:source_params.keySet()){
                     if(source_key.equals(key.toLowerCase())){
                         source_data=source.get(key);
                     }
                 }
-               // .get(source_params.get(key));
 
                destination_data.setValue(source_data.getValue());
 
