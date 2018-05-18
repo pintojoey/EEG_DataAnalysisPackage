@@ -1,11 +1,5 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
-import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
 
 /***********************************************************************************************************************
  *
@@ -36,20 +30,11 @@ public class Property {
     private String name;
     private String type;
     private String defaultValue;
-    private Object value;
-    private JSONObject schema;
 
     public Property(String name, String type, String defaultValue) {
         this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;
-        this.schema = null;
-    }
-    public Property(String name, String type, String defaultValue, JSONObject schema) {
-        this.name = name;
-        this.type = type;
-        this.defaultValue = defaultValue;
-        this.schema = schema;
     }
 
     public String getName() {
@@ -76,41 +61,4 @@ public class Property {
         this.defaultValue = defaultValue;
     }
 
-    public JSONObject getSchema() {
-        return schema;
-    }
-
-    public void setSchema(JSONObject schema) {
-        this.schema = schema;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public int asInt(){
-        return (int)(double)value;
-    }
-
-    public String asString(){
-        if(this.type.equals(NUMBER))
-            return String.valueOf((double)value);
-        return (String)value;
-    }
-
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    public Object toValue(String value) {
-        switch(this.type){
-            case NUMBER:
-                return Double.parseDouble(value);
-            case STRING:
-                return value;
-            default:
-                return value;
-        }
-    }
 }

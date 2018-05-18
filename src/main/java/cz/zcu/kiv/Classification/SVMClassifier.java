@@ -201,10 +201,10 @@ public class SVMClassifier extends Block implements IClassifier {
     public void process() {
         setFeatureExtraction((IFeatureExtraction) getInput().get(FEATURE_EXTRACTOR_OUTPUT).getValue());
         this.config=new HashMap<>();
-        config.put("config_num_iterations",String.valueOf(getProperties().get(ITERATIONS_FIELD).asInt()));
-        config.put("config_step_size",String.valueOf(getProperties().get(STEP_SIZE_FIELD).asString()));
-        config.put("config_reg_param",String.valueOf(getProperties().get(REG_PARAMETERS_FIELD).asString()));
-        config.put("config_mini_batch_fraction",String.valueOf(getProperties().get(MINI_BATCH_FRACTION_FIELD).asString()));
+        config.put("config_num_iterations",String.valueOf(ITERATIONS));
+        config.put("config_step_size",String.valueOf(STEP_SIZE));
+        config.put("config_reg_param",String.valueOf(REG_PARAMETERS));
+        config.put("config_mini_batch_fraction",String.valueOf(MINI_BATCH_FRACTION));
         train((List<double[][]>) getInput().get(RAW_EPOCHS_OUTPUT).getValue(), (List<Double>) getInput().get(RAW_TARGETS_OUTPUT).getValue(), getFeatureExtraction());
         getOutput().get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
     }

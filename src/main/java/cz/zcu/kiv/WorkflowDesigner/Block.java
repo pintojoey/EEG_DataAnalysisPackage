@@ -67,8 +67,27 @@ public class Block {
         JSONObject values = blockObject.getJSONObject("values");
         for(String key:this.properties.keySet()){
             if(values.has(key.toLowerCase())){
-                Property property=properties.get(key);
-                property.setValue(property.toValue(values.getString(key.toLowerCase())));
+                for (Field f: getClass().getDeclaredFields()) {
+                    f.setAccessible(true);
+                    BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
+                    if (blockProperty != null) {
+                        try {
+                            if(blockProperty.name().equals(key)){
+                                properties.put(blockProperty.name(), new Property(blockProperty.name(), blockProperty.type(), blockProperty.defaultValue()));
+                                System.out.println(f.getType());
+                                if(f.getType().equals(int.class))
+                                    f.set(this,(int) Double.parseDouble(values.getString(key.toLowerCase())));
+                                else if(f.getType().equals(double.class))
+                                f.set(this,Double.parseDouble(values.getString(key.toLowerCase())));
+
+                                else f.set(this, f.getType().cast(values.getString(key.toLowerCase())));
+                                break;
+                            }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         }
 
@@ -148,16 +167,13 @@ public class Block {
         if(getInput()!=null&&getInput().size()>0) {
             for (String key : getInput().keySet()) {
                 Data destination_data=getInput().get(key);
-
                 HashMap<String, Data> source = blocks.get(source_blocks.get(key.toLowerCase())).getOutput();
                 Data source_data=null;
-
                 for(String source_key:source_params.keySet()){
                     if(source_key.equals(key.toLowerCase())){
                         source_data=source.get(key);
                     }
                 }
-
                destination_data.setValue(source_data.getValue());
 
             }
@@ -215,13 +231,7 @@ public class Block {
 
             BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
             if (blockProperty != null){
-                try {
-                    Object value = f.get(this);
                     properties.put(blockProperty.name(),new Property(blockProperty.name(),blockProperty.type(),blockProperty.defaultValue()));
-                    getProperties().get(blockProperty.name()).setValue(value);
-                } catch ( IllegalAccessException e) {
-                    e.printStackTrace();
-                }
             }
 
             BlockInput blockInput = f.getAnnotation(BlockInput.class);

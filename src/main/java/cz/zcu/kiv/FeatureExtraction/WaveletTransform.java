@@ -271,7 +271,6 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
 
     @Override
     public void process() {
-        NAME=  (int)(double)this.getProperties().get(NAME_FIELD).getValue();
         this.getOutput().get(FEATURE_EXTRACTOR_OUTPUT).setValue(this);
         setProcessed(true);
     }

@@ -404,10 +404,10 @@ public class OffLineDataProvider extends Block {
     @Override
     public void process() {
         try {
-            String infoTxtFile= (String) getProperties().get(FILE_LOCATION_FIELD).getValue();
-            args=new String[]{infoTxtFile};
+
+            args=new String[]{FILE_LOCATION};
             loadData();
-            loadFilesFromInfoTxt(infoTxtFile);
+            loadFilesFromInfoTxt(FILE_LOCATION);
             getOutput().get(RAW_EPOCHS_OUTPUT).setValue(epochs);
             getOutput().get(RAW_TARGETS_OUTPUT).setValue(targets);
             setProcessed(true);
