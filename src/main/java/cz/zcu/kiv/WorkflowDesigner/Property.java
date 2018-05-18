@@ -93,7 +93,7 @@ public class Property {
     }
 
     public String asString(){
-        if(this.type==NUMBER)
+        if(this.type.equals(NUMBER))
             return String.valueOf((double)value);
         return (String)value;
     }

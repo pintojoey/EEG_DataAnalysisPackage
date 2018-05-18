@@ -1,6 +1,5 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
-import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;

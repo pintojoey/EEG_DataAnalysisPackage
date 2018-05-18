@@ -8,7 +8,6 @@ import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.WorkflowDesigner.Data;
-import cz.zcu.kiv.WorkflowDesigner.Field;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,7 +65,9 @@ public class SVMClassifier extends Block implements IClassifier {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
 
+    @BlockInput( name = FEATURE_EXTRACTOR_OUTPUT, type = FEATURE_EXTRACTOR , cardinality = ONE_TO_ONE)
     private static IFeatureExtraction fe;
+
     private static SVMModel model;
     private HashMap<String,String> config;
 
@@ -82,11 +83,18 @@ public class SVMClassifier extends Block implements IClassifier {
     @BlockProperty(name = MINI_BATCH_FRACTION_FIELD, type = NUMBER, defaultValue = "1")
     private double MINI_BATCH_FRACTION;
 
+
     private static Function<double[][], double[]> featureExtractionFunc = new Function<double[][], double[]>() {
         public double[] call(double[][] epoch) {
             return fe.extractFeatures(epoch);
         }
     };
+
+    @BlockInput(name = RAW_EPOCHS_OUTPUT, type = EPOCH_LIST, cardinality = ONE_TO_ONE)
+    private List<double[][]>epochs;
+
+    @BlockInput(name = RAW_TARGETS_OUTPUT, type = TARGET_LIST, cardinality = ONE_TO_ONE)
+    private List<Double>targets;
 
     private static Function<Tuple2<Double, double[]>, LabeledPoint> unPackFunction = new Function<Tuple2<Double, double[]>, LabeledPoint>() {
         @Override
@@ -177,7 +185,6 @@ public class SVMClassifier extends Block implements IClassifier {
     }
 
     @Override
-    @BlockInput( name = FEATURE_EXTRACTOR_OUTPUT, type = FEATURE_EXTRACTOR , cardinality = ONE_TO_ONE)
     public IFeatureExtraction getFeatureExtraction() {
         return fe;
     }
@@ -192,66 +199,22 @@ public class SVMClassifier extends Block implements IClassifier {
     public void initialize() {
         super.initialize();
 
-
-
-        final HashMap<String,Data>input=new HashMap<>();
-        input.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_ONE));
-        input.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_ONE));
-        input.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_ONE));
-
         final HashMap<String,Data>output=new HashMap<>();
         output.put(CLASSIFICATION_MODEL_OUTPUT, new Data(CLASSIFICATION_MODEL_OUTPUT,MODEL, ONE_TO_MANY));
         output.put(CLASSIFICATION_STATISTICS_OUTPUT, new Data(CLASSIFICATION_STATISTICS_OUTPUT,MODEL, ONE_TO_MANY));
-
-        setInput(input);
         setOutput(output);
     }
 
     @Override
     public void process() {
         setFeatureExtraction((IFeatureExtraction) getInput().get(FEATURE_EXTRACTOR_OUTPUT).getValue());
-        List<double[][]> epochs = (List<double[][]>) getInput().get(RAW_EPOCHS_OUTPUT).getValue();
-        List<Double>targets = (List<Double>) getInput().get(RAW_TARGETS_OUTPUT).getValue();
         this.config=new HashMap<>();
-        config.put("config_num_iterations",String.valueOf(ITERATIONS));
-        config.put("config_step_size",String.valueOf(STEP_SIZE));
-        config.put("config_reg_param",String.valueOf(REG_PARAMETERS));
-        config.put("config_mini_batch_fraction",String.valueOf(MINI_BATCH_FRACTION));
-        train(epochs, targets, getFeatureExtraction());
-
+        config.put("config_num_iterations",String.valueOf(getProperties().get(ITERATIONS_FIELD).asInt()));
+        config.put("config_step_size",String.valueOf(getProperties().get(STEP_SIZE_FIELD).asString()));
+        config.put("config_reg_param",String.valueOf(getProperties().get(REG_PARAMETERS_FIELD).asString()));
+        config.put("config_mini_batch_fraction",String.valueOf(getProperties().get(MINI_BATCH_FRACTION_FIELD).asString()));
+        train((List<double[][]>) getInput().get(RAW_EPOCHS_OUTPUT).getValue(), (List<Double>) getInput().get(RAW_TARGETS_OUTPUT).getValue(), getFeatureExtraction());
         getOutput().get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
     }
 
-
-    public int getITERATIONS() {
-        return ITERATIONS;
-    }
-
-    public void setITERATIONS(int ITERATIONS) {
-        this.ITERATIONS = ITERATIONS;
-    }
-
-    public int getSTEP_SIZE() {
-        return STEP_SIZE;
-    }
-
-    public void setSTEP_SIZE(int STEP_SIZE) {
-        this.STEP_SIZE = STEP_SIZE;
-    }
-
-    public double getREG_PARAMETERS() {
-        return REG_PARAMETERS;
-    }
-
-    public void setREG_PARAMETERS(double REG_PARAMETERS) {
-        this.REG_PARAMETERS = REG_PARAMETERS;
-    }
-
-    public double getMINI_BATCH_FRACTION() {
-        return MINI_BATCH_FRACTION;
-    }
-
-    public void setMINI_BATCH_FRACTION(double MINI_BATCH_FRACTION) {
-        this.MINI_BATCH_FRACTION = MINI_BATCH_FRACTION;
-    }
 }

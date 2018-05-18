@@ -1,13 +1,11 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockInput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /***********************************************************************************************************************
@@ -206,6 +204,8 @@ public class Block {
     public void initialize(){
         if(getProperties()==null)
         setProperties(new HashMap<String,Property>());
+        if(getInput()==null)
+        setInput(new HashMap<String, Data>());
 
         for (Field f: getClass().getDeclaredFields()) {
             f.setAccessible(true);
@@ -213,17 +213,24 @@ public class Block {
             BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
             if (blockProperty != null){
                 try {
-                    System.out.println(f.getName());
                     Object value = f.get(this);
-                    System.out.println(f.getName());
                     properties.put(blockProperty.name(),new Property(blockProperty.name(),blockProperty.type(),blockProperty.defaultValue()));
                     getProperties().get(blockProperty.name()).setValue(value);
                 } catch ( IllegalAccessException e) {
                     e.printStackTrace();
                 }
-
             }
 
+            BlockInput blockInput = f.getAnnotation(BlockInput.class);
+            if (blockInput != null){
+                try {
+                    Object value = f.get(this);
+                    input.put(blockInput.name(),new Data(blockInput.name(),blockInput.type(),blockInput.cardinality()));
+                    getInput().get(blockInput.name()).setValue(value);
+                } catch ( IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
