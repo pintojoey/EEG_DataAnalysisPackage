@@ -11,17 +11,17 @@ import cz.zcu.kiv.eegdsp.wavelet.discrete.WaveletTransformationDiscrete;
 import cz.zcu.kiv.eegdsp.wavelet.discrete.algorithm.wavelets.WaveletDWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.spark.api.java.function.Function;
 
 import java.util.HashMap;
 
 import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
+import static cz.zcu.kiv.WorkflowDesigner.DataType.EPOCH_LIST;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.SIGNAL;
 import static cz.zcu.kiv.WorkflowDesigner.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
 
 
@@ -255,7 +255,11 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
         return result;
     }
 
-
+    private Function<double[][], double[]> featureExtractionFunc = new Function<double[][], double[]>() {
+        public double[] call(double[][] epoch) {
+            return extractFeatures(epoch);
+        }
+    };
 
     @Override
     public Block initialize() {
@@ -268,14 +272,20 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
         HashMap<String,Data>output=new HashMap<>();
         output.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_MANY));
 
-        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION,null,output, properties);
+        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION,null,output, properties){
+
+            @Override
+            public void process() {
+                NAME= (int) this.getProperties().get(NAME_FIELD).getValue();
+                this.getOutput().get(FEATURE_EXTRACTOR).setValue(featureExtractionFunc);
+                setProcessed(true);
+            }
+        };
 
     }
 
-    @Override
-    public void processBlock(HashMap<String, Block> blocks, HashMap<String, String> source_blocks, HashMap<String, String> source_params) {
 
-    }
+
 
 
 

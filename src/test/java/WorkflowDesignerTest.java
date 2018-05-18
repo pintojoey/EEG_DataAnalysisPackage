@@ -279,7 +279,7 @@ public class WorkflowDesignerTest {
     }
 
     @Test
-    public void workflow_parse(){
+    public void workflow_parse() throws Exception {
         try {
             Workflow.initializeWorkflow();
             String import_json = FileUtils.readFileToString(new File(Workflow.WORKFLOW_DESIGNER_DIRECTORY+"export.json"));
@@ -294,58 +294,64 @@ public class WorkflowDesignerTest {
             }
 
             JSONArray edges_array = jobject.getJSONArray("edges");
-            boolean all_processed=false;
-            while(!all_processed){
-                all_processed=true;
+            Block wait_block;
+            while(true){
                 //Populate wait queue
                 ArrayList<Integer>wait=new ArrayList<>();
                 for(int i=0;i<edges_array.length();i++) {
                     JSONObject edge_object = edges_array.getJSONObject(i);
                     Block block1 = blocks.get(edge_object.getInt("block1"));
                     Block block2 = blocks.get(edge_object.getInt("block2"));
-                    if (block1.isProcessed() && !block2.isProcessed()) {
+                    if(block1.getInput()==null||block1.getInput().size()==0){
+                        wait.add(edge_object.getInt("block1"));
+                    }
+                    else if (block1.isProcessed() && !block2.isProcessed()) {
                         wait.add(edge_object.getInt("block2"));
                     }
-                    if(!block1.isProcessed()||!block2.isProcessed()){
-                        all_processed=false;
-                    }
+
                 }
+                //Wait queue is empty, exit
+                if(wait.size()==0)break;
 
                 //Process wait queue
-                for(int j=0;j<wait.size();j++){
+                for (Integer aWait : wait) {
                     boolean ready = true;
-                    int wait_block_id=wait.get(j);
-                    Block wait_block=blocks.get(wait_block_id);
+                    int wait_block_id = aWait;
+                    System.out.println("Wait block " + wait_block_id);
+                    wait_block = blocks.get(wait_block_id);
 
-                    HashMap<Integer,Block> dependencies = new HashMap<>();
-                    HashMap<String,String> source_param=new HashMap<>();
-                    HashMap<String,Integer> source_block=new HashMap<>();
+                    HashMap<Integer, Block> dependencies = new HashMap<>();
+                    HashMap<String, String> source_param = new HashMap<>();
+                    HashMap<String, Integer> source_block = new HashMap<>();
 
                     //Check dependencies of waiting block
-                    for(int i=0;i<edges_array.length();i++) {
+                    for (int i = 0; i < edges_array.length(); i++) {
                         JSONObject edge_object = edges_array.getJSONObject(i);
-                        if(wait_block_id!=edge_object.getInt("block2"))continue;
+                        if (wait_block_id != edge_object.getInt("block2")) continue;
 
-                        JSONArray connector1=edge_object.getJSONArray("connector1");
-                        JSONArray connector2=edge_object.getJSONArray("connector2");
-                        int block1_id=edge_object.getInt("block1");
+                        JSONArray connector1 = edge_object.getJSONArray("connector1");
+                        JSONArray connector2 = edge_object.getJSONArray("connector2");
+                        int block1_id = edge_object.getInt("block1");
+                        System.out.println("Dependent " + block1_id);
                         Block block1 = blocks.get(block1_id);
 
-                        for(int k=0;k<connector1.length();k++){
-                            source_param.put(connector2.getString(k),connector1.getString(k));
-                            source_block.put(connector2.getString(k),block1_id);
+                        for (int k = 0; k < connector1.length(); k++) {
+                            source_param.put(connector2.getString(k), connector1.getString(k));
+                            source_block.put(connector2.getString(k), block1_id);
                         }
 
-                        dependencies.put(block1_id,block1);
+                        dependencies.put(block1_id, block1);
 
-                        if(!block1.isProcessed()){
-                            ready=false;
+                        if (!block1.isProcessed()) {
+                            ready = false;
                             break;
                         }
                     }
-                    if(ready){
+                    if (ready) {
                         //Process the ready block
                         System.out.println(dependencies.size());
+                        System.out.println("Processing "+ wait_block_id);
+                        wait_block.processBlock(dependencies, source_block, source_param);
                         wait_block.setProcessed(true);
                         break;
                     }

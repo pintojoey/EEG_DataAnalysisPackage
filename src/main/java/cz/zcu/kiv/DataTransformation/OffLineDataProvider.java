@@ -399,16 +399,26 @@ public class OffLineDataProvider implements WorkflowLogic {
         HashMap<String,Property>properties=new HashMap<>();
         properties.put(FILE_LOCATION_FIELD,new Property(FILE_LOCATION_FIELD, STRING, "Not selected"));
 
-        HashMap<String,Data>output=new HashMap<>();
+        final HashMap<String,Data>output=new HashMap<>();
         output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
         output.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_MANY));
 
-        return new Block(INFOTXT_FILE,OFFLINE_DATA_PROVIDER,null,output, properties);
+        return new Block(INFOTXT_FILE,OFFLINE_DATA_PROVIDER, null,output, properties){
+            @Override
+            public void process() {
+                try {
+                    System.out.println("Here");
+                    loadFilesFromInfoTxt((String)getProperties().get(INFOTXT_FILE).getValue());
+                    loadData();
+                    output.get(EPOCH_LIST).setValue(epochs);
+                    output.get(TARGET_LIST).setValue(targets);
+                    setProcessed(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
-    @Override
-    public void processBlock(HashMap<String, Block> blocks, HashMap<String, String> source_blocks, HashMap<String, String> source_params) {
 
-    }
-    
 }

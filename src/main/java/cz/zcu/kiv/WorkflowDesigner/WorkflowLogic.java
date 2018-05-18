@@ -32,6 +32,4 @@ public interface WorkflowLogic {
 
     Block initialize();
 
-    void processBlock(HashMap<String,Block>blocks,HashMap<String,String>source_blocks,HashMap<String,String>source_params);
-
 }

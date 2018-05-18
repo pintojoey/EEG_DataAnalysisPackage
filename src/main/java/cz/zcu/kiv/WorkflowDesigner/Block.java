@@ -59,7 +59,6 @@ public class Block {
         this.properties = block.getProperties();
         this.input = block.getInput();
         this.output = block.getOutput();
-        if(input==null)processed=true;
 
         JSONObject values = blockObject.getJSONObject("values");
         for(String key:this.properties.keySet()){
@@ -134,6 +133,20 @@ public class Block {
         blockjs.put("fields", fields);
 
         return blockjs;
+    }
+
+    public void processBlock(HashMap<Integer, Block> blocks, HashMap<String, Integer> source_blocks, HashMap<String, String> source_params){
+        if(getInput()!=null&&getInput().size()>0) {
+            for (String key : getInput().keySet()) {
+                Data source_data = blocks.get(source_blocks.get(key)).getOutput().get(source_params.get(key));
+                getInput().get(key).setValue(source_data.getValue());
+            }
+        }
+        process();
+    }
+
+    public void process(){
+
     }
 
     public HashMap<String, Property> getProperties() {

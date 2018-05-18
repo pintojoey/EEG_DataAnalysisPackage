@@ -179,22 +179,31 @@ public class SVMClassifier implements IClassifier,WorkflowLogic {
         properties.put(REG_PARAMETERS,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
         properties.put(MINI_BATCH_FRACTION,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
 
-        HashMap<String,Data>input=new HashMap<>();
+        final HashMap<String,Data>input=new HashMap<>();
         input.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_ONE));
         input.put(RAW_TARGETS_INPUT,new Data(RAW_TARGETS_INPUT,TARGET_LIST, ONE_TO_ONE));
         input.put(FEATURE_EXTRACTOR_INPUT,new Data(FEATURE_EXTRACTOR_INPUT,FEATURE_EXTRACTOR, ONE_TO_ONE));
 
-        HashMap<String,Data>output=new HashMap<>();
+        final HashMap<String,Data>output=new HashMap<>();
         output.put(CLASSIFICATION_MODEL_OUTPUT, new Data(CLASSIFICATION_MODEL_OUTPUT,MODEL, ONE_TO_MANY));
         output.put(CLASSIFICATION_STATISTICS_OUTPUT, new Data(CLASSIFICATION_STATISTICS_OUTPUT,MODEL, ONE_TO_MANY));
 
-        return new Block(SVM_CLASSIFIER,MACHINE_LEARNING,input,output, properties);
+        return new Block(SVM_CLASSIFIER,MACHINE_LEARNING,input,output, properties){
+            @Override
+            public void process()  {
+                setFeatureExtraction((IFeatureExtraction) input.get(FEATURE_EXTRACTOR_INPUT).getValue());
+                List<double[][]> epochs = (List<double[][]>) input.get(RAW_EPOCHS_INPUT).getValue();
+                List<Double>targets = (List<Double>) input.get(RAW_TARGETS_INPUT).getValue();
+
+                train(epochs, targets, getFeatureExtraction());
+
+                output.get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
+
+            }
+        };
     }
 
-    @Override
-    public void processBlock(HashMap<String, Block> blocks, HashMap<String, String> source_blocks, HashMap<String, String> source_params) {
 
-    }
 
 
 }
