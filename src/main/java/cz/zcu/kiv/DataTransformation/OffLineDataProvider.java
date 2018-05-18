@@ -74,7 +74,7 @@ public class OffLineDataProvider extends Block {
     //
     private static Log logger = LogFactory.getLog(OffLineDataProvider.class);
 
-
+    @BlockProperty(name = FILE_LOCATION_FIELD, type = STRING , defaultValue = "Not Selected")
     private String FILE_LOCATION;
 
     private String[] args;
@@ -428,12 +428,4 @@ public class OffLineDataProvider extends Block {
         }
     }
 
-    @BlockProperty(name = FILE_LOCATION_FIELD, type = STRING , defaultValue = "Not Selected")
-    public String getFILE_LOCATION() {
-        return FILE_LOCATION;
-    }
-
-    public void setFILE_LOCATION(String FILE_LOCATION) {
-        this.FILE_LOCATION = FILE_LOCATION;
-    }
 }

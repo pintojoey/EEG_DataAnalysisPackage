@@ -3,10 +3,12 @@ package cz.zcu.kiv.Classification;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
 import cz.zcu.kiv.Utils.SparkInitializer;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockInput;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
 import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.WorkflowDesigner.Data;
-import cz.zcu.kiv.WorkflowDesigner.Property;
+import cz.zcu.kiv.WorkflowDesigner.Field;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,8 +30,8 @@ import java.util.List;
 import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.*;
 import static cz.zcu.kiv.WorkflowDesigner.Field.*;
-import static cz.zcu.kiv.WorkflowDesigner.Field.FEATURE_SIZE_FIELD;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
+import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.SVM_CLASSIFIER;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
@@ -63,14 +65,21 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
 public class SVMClassifier extends Block implements IClassifier {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
+
     private static IFeatureExtraction fe;
     private static SVMModel model;
     private HashMap<String,String> config;
 
-
+    @BlockProperty(name = ITERATIONS_FIELD, type = NUMBER , defaultValue = "10")
     private int ITERATIONS;
+
+    @BlockProperty(name = STEP_SIZE_FIELD , type = NUMBER, defaultValue =  "1")
     private int STEP_SIZE;
+
+    @BlockProperty(name = REG_PARAMETERS_FIELD, type = NUMBER, defaultValue = "1")
     private double REG_PARAMETERS;
+
+    @BlockProperty(name = MINI_BATCH_FRACTION_FIELD, type = NUMBER, defaultValue = "1")
     private double MINI_BATCH_FRACTION;
 
     private static Function<double[][], double[]> featureExtractionFunc = new Function<double[][], double[]>() {
@@ -168,6 +177,7 @@ public class SVMClassifier extends Block implements IClassifier {
     }
 
     @Override
+    @BlockInput( name = FEATURE_EXTRACTOR_OUTPUT, type = FEATURE_EXTRACTOR , cardinality = ONE_TO_ONE)
     public IFeatureExtraction getFeatureExtraction() {
         return fe;
     }

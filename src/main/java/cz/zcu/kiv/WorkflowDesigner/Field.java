@@ -31,8 +31,8 @@ public class Field {
     public static final String FEATURE_SIZE_FIELD="Feature Size";
     public static final String FILE_LOCATION_FIELD="File location";
     public static final String ITERATIONS_FIELD = "Iterations";
-    public static final String STEP_SIZE = "Step size";
-    public static final String REG_PARAMETERS ="Reg parameters";
-    public static final String MINI_BATCH_FRACTION="Mini Batch Fractions";
+    public static final String STEP_SIZE_FIELD = "Step size";
+    public static final String REG_PARAMETERS_FIELD ="Reg parameters";
+    public static final String MINI_BATCH_FRACTION_FIELD="Mini Batch Fractions";
 
 }
