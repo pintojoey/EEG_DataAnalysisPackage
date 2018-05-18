@@ -30,10 +30,7 @@ public class DataField {
     public static final String SIGNAL_OUTPUT = "SignalOut";
     public static final String CLASSIFICATION_MODEL_OUTPUT = "ClassifyModelOut";
     public static final String CLASSIFICATION_STATISTICS_OUTPUT = "ClassifyStatsOut";
-    public static final String FEATURE_EXTRACTOR_INPUT = "FeatureExtractorIn";
     public static final String FEATURE_EXTRACTOR_OUTPUT = "FeatureExtractorOut";
     public static final String RAW_EPOCHS_OUTPUT = "RawEpochsOut";
-    public static final String RAW_EPOCHS_INPUT = "RawEpochsIn";
     public static final String RAW_TARGETS_OUTPUT = "RawTargetsOut";
-    public static final String RAW_TARGETS_INPUT = "RawTargetsIn";
 }

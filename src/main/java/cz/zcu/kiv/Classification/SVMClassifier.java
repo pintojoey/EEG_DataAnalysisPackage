@@ -6,7 +6,6 @@ import cz.zcu.kiv.Utils.SparkInitializer;
 import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.WorkflowDesigner.Data;
 import cz.zcu.kiv.WorkflowDesigner.Property;
-import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,7 +58,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
  * SVMClassifier, 2017/06/27 12:13 Dorian Beganovic
  *
  **********************************************************************************************************************/
-public class SVMClassifier implements IClassifier,WorkflowLogic {
+public class SVMClassifier extends Block implements IClassifier {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
     private static IFeatureExtraction fe;
@@ -170,37 +169,45 @@ public class SVMClassifier implements IClassifier,WorkflowLogic {
         this.config = config;
     }
 
+
     @Override
-    public Block initialize() {
+    public void initialize() {
         HashMap<String,Property>properties=new HashMap<>();
 
-        properties.put(ITERATIONS_FIELD,new Property(NAME_FIELD, NUMBER, "name"));
-        properties.put(STEP_SIZE,new Property(EPOCH_SIZE_FIELD, NUMBER, "1"));
-        properties.put(REG_PARAMETERS,new Property(SKIP_SAMPLES_FIELD, NUMBER, "0"));
-        properties.put(MINI_BATCH_FRACTION,new Property(FEATURE_SIZE_FIELD, NUMBER, "1"));
+        properties.put(ITERATIONS_FIELD,new Property(ITERATIONS_FIELD, NUMBER, "name"));
+        properties.put(STEP_SIZE,new Property(STEP_SIZE, NUMBER, "1"));
+        properties.put(REG_PARAMETERS,new Property(REG_PARAMETERS, NUMBER, "0"));
+        properties.put(MINI_BATCH_FRACTION,new Property(MINI_BATCH_FRACTION, NUMBER, "1"));
 
         final HashMap<String,Data>input=new HashMap<>();
         input.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_ONE));
-        input.put(RAW_TARGETS_INPUT,new Data(RAW_TARGETS_INPUT,TARGET_LIST, ONE_TO_ONE));
-        input.put(FEATURE_EXTRACTOR_INPUT,new Data(FEATURE_EXTRACTOR_INPUT,FEATURE_EXTRACTOR, ONE_TO_ONE));
+        input.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_ONE));
+        input.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_ONE));
 
         final HashMap<String,Data>output=new HashMap<>();
         output.put(CLASSIFICATION_MODEL_OUTPUT, new Data(CLASSIFICATION_MODEL_OUTPUT,MODEL, ONE_TO_MANY));
         output.put(CLASSIFICATION_STATISTICS_OUTPUT, new Data(CLASSIFICATION_STATISTICS_OUTPUT,MODEL, ONE_TO_MANY));
 
-        return new Block(SVM_CLASSIFIER,MACHINE_LEARNING,input,output, properties){
-            @Override
-            public void process()  {
-                setFeatureExtraction((IFeatureExtraction) input.get(FEATURE_EXTRACTOR_INPUT).getValue());
-                List<double[][]> epochs = (List<double[][]>) input.get(RAW_EPOCHS_INPUT).getValue();
-                List<Double>targets = (List<Double>) input.get(RAW_TARGETS_INPUT).getValue();
+        setName(SVM_CLASSIFIER);
+        setFamily(MACHINE_LEARNING);
+        setInput(input);
+        setOutput(output);
+        setProperties(properties);
+    }
 
-                train(epochs, targets, getFeatureExtraction());
+    @Override
+    public void process() {
+        setFeatureExtraction((IFeatureExtraction) getInput().get(FEATURE_EXTRACTOR_OUTPUT).getValue());
+        List<double[][]> epochs = (List<double[][]>) getInput().get(RAW_EPOCHS_OUTPUT).getValue();
+        List<Double>targets = (List<Double>) getInput().get(RAW_TARGETS_OUTPUT).getValue();
+        this.config=new HashMap<>();
+        config.put("config_num_iterations",String.valueOf(getProperties().get(ITERATIONS_FIELD).asInt()));
+        config.put("config_step_size",getProperties().get(STEP_SIZE).asString());
+        config.put("config_reg_param",getProperties().get(REG_PARAMETERS).asString());
+        config.put("config_mini_batch_fraction",getProperties().get(MINI_BATCH_FRACTION).asString());
+        train(epochs, targets, getFeatureExtraction());
 
-                output.get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
-
-            }
-        };
+        getOutput().get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
     }
 
 

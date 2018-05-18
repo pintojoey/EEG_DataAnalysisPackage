@@ -88,6 +88,17 @@ public class Property {
         return value;
     }
 
+    public int asInt(){
+        return (int)(double)value;
+    }
+
+    public String asString(){
+        if(this.type==NUMBER)
+            return String.valueOf((double)value);
+        return (String)value;
+    }
+
+
     public void setValue(Object value) {
         this.value = value;
     }

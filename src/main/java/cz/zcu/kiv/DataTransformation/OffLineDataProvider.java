@@ -1,9 +1,6 @@
 package cz.zcu.kiv.DataTransformation;
 
-import cz.zcu.kiv.WorkflowDesigner.Block;
-import cz.zcu.kiv.WorkflowDesigner.Data;
-import cz.zcu.kiv.WorkflowDesigner.Property;
-import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
+import cz.zcu.kiv.WorkflowDesigner.*;
 import cz.zcu.kiv.signal.*;
 import cz.zcu.kiv.Utils.*;
 import org.apache.commons.logging.Log;
@@ -51,7 +48,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.OFFLINE_DATA_PROVIDER;
  *
  **********************************************************************************************************************/
 
-public class OffLineDataProvider implements WorkflowLogic {
+public class OffLineDataProvider extends Block {
 
     //
     private String vhdrFile;
@@ -394,8 +391,11 @@ public class OffLineDataProvider implements WorkflowLogic {
         return this.targets;
     }
 
+
+
+
     @Override
-    public Block initialize() {
+    public void initialize() {
         HashMap<String,Property>properties=new HashMap<>();
         properties.put(FILE_LOCATION_FIELD,new Property(FILE_LOCATION_FIELD, STRING, "Not selected"));
 
@@ -403,22 +403,29 @@ public class OffLineDataProvider implements WorkflowLogic {
         output.put(RAW_EPOCHS_OUTPUT,new Data(RAW_EPOCHS_OUTPUT,EPOCH_LIST, ONE_TO_MANY));
         output.put(RAW_TARGETS_OUTPUT,new Data(RAW_TARGETS_OUTPUT,TARGET_LIST, ONE_TO_MANY));
 
-        return new Block(INFOTXT_FILE,OFFLINE_DATA_PROVIDER, null,output, properties){
-            @Override
-            public void process() {
-                try {
-                    System.out.println("Here");
-                    loadFilesFromInfoTxt((String)getProperties().get(INFOTXT_FILE).getValue());
-                    loadData();
-                    output.get(EPOCH_LIST).setValue(epochs);
-                    output.get(TARGET_LIST).setValue(targets);
-                    setProcessed(true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        setName(INFOTXT_FILE);
+        setFamily(OFFLINE_DATA_PROVIDER);
+        setInput(null);
+        setOutput(output);
+        setProperties(properties);
     }
+
+    @Override
+    public void process() {
+        try {
+            String infoTxtFile= (String) getProperties().get(FILE_LOCATION_FIELD).getValue();
+            args=new String[]{infoTxtFile};
+            loadData();
+            loadFilesFromInfoTxt(infoTxtFile);
+            getOutput().get(RAW_EPOCHS_OUTPUT).setValue(epochs);
+            getOutput().get(RAW_TARGETS_OUTPUT).setValue(targets);
+            setProcessed(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }

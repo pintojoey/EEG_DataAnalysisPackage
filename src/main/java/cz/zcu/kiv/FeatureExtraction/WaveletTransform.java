@@ -16,7 +16,6 @@ import org.apache.spark.api.java.function.Function;
 import java.util.HashMap;
 
 import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.EPOCH_LIST;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
 import static cz.zcu.kiv.WorkflowDesigner.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
@@ -49,7 +48,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
  * WaveletTransform, 2017/06/11 15:39 Dorian Beganovic
  *
  **********************************************************************************************************************/
-public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
+public class WaveletTransform extends Block implements IFeatureExtraction {
     private static Log logger = LogFactory.getLog(WaveletTransform.class);
 
     private static final long serialVersionUID = 7526472295622776147L;
@@ -262,7 +261,7 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
     };
 
     @Override
-    public Block initialize() {
+    public void initialize() {
         HashMap<String,Property>properties = new HashMap<>();
         properties.put(NAME_FIELD,new Property(NAME_FIELD, NUMBER, "name"));
         properties.put(EPOCH_SIZE_FIELD,new Property(EPOCH_SIZE_FIELD, NUMBER, "1"));
@@ -271,24 +270,19 @@ public class WaveletTransform implements IFeatureExtraction,WorkflowLogic {
 
         HashMap<String,Data>output=new HashMap<>();
         output.put(FEATURE_EXTRACTOR_OUTPUT,new Data(FEATURE_EXTRACTOR_OUTPUT,FEATURE_EXTRACTOR, ONE_TO_MANY));
-
-        return new Block(WAVELET_TRANSFORM,FEATURE_EXTRACTION,null,output, properties){
-
-            @Override
-            public void process() {
-                NAME= (int) this.getProperties().get(NAME_FIELD).getValue();
-                this.getOutput().get(FEATURE_EXTRACTOR).setValue(featureExtractionFunc);
-                setProcessed(true);
-            }
-        };
-
+        setName(WAVELET_TRANSFORM);
+        setFamily(FEATURE_EXTRACTION);
+        setInput(null);
+        setOutput(output);
+        setProperties(properties);
     }
 
-
-
-
-
-
+    @Override
+    public void process() {
+        NAME=  (int)(double)this.getProperties().get(NAME_FIELD).getValue();
+        this.getOutput().get(FEATURE_EXTRACTOR_OUTPUT).setValue(this);
+        setProcessed(true);
+    }
 
 
 }

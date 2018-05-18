@@ -1,24 +1,26 @@
 import cz.zcu.kiv.Classification.*;
 import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
-import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import cz.zcu.kiv.Pipeline.PipelineBuilder;
-import cz.zcu.kiv.Utils.ClassificationStatistics;
 import cz.zcu.kiv.WorkflowDesigner.Block;
+import cz.zcu.kiv.WorkflowDesigner.WorkflowBlock;
 import cz.zcu.kiv.WorkflowDesigner.Workflow;
-import cz.zcu.kiv.WorkflowDesigner.WorkflowLogic;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
+
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.INFOTXT_FILE;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.SVM_CLASSIFIER;
+import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
 
 /***********************************************************************************************************************
  *
@@ -48,6 +50,15 @@ import java.util.*;
 public class WorkflowDesignerTest {
     private static Log logger = LogFactory.getLog(PipelineBuilder.class);
 
+    @Before
+    public void initalizeHDFSTest() throws IOException {
+        EEGTest.initalizeHDFSTest();
+    }
+
+    @After
+    public void unintializeHDFSTest() throws IOException {
+        EEGTest.unintializeHDFSTest();
+    }
 //
 //    public void execute() throws Exception {
 //        String[] files = new String[5];
@@ -268,11 +279,14 @@ public class WorkflowDesignerTest {
             }
         }
 */
-        Block offline_data=new OffLineDataProvider().initialize();
+        Block offline_data=new OffLineDataProvider();
+        offline_data.initialize();
         assert offline_data !=null;
-        Block wavelet_transform=new WaveletTransform().initialize();
+        Block wavelet_transform=new WaveletTransform();
+        wavelet_transform.initialize();
         assert wavelet_transform !=null;
-        Block svm_classifier=new SVMClassifier().initialize();
+        Block svm_classifier=new SVMClassifier();
+        svm_classifier.initialize();
         assert svm_classifier !=null;
 
 
@@ -289,7 +303,22 @@ public class WorkflowDesignerTest {
             HashMap<Integer,Block>blocks=new HashMap<>();
             for(int i=0; i<blocks_array.length(); i++){
                 JSONObject block_object=blocks_array.getJSONObject(i);
-                Block block = new Block(block_object);
+
+                Block block = null;
+                switch (block_object.getString("type")){
+                    case WAVELET_TRANSFORM:
+                        block = new WaveletTransform();
+                        break;
+                    case SVM_CLASSIFIER:
+                        block = new SVMClassifier();
+                        break;
+                    case INFOTXT_FILE:
+                        block = new OffLineDataProvider();
+                        break;
+                }
+
+                block.initialize();
+                block.fromJSON(block_object);
                 blocks.put(block_object.getInt("id"),block);
             }
 
@@ -302,12 +331,17 @@ public class WorkflowDesignerTest {
                     JSONObject edge_object = edges_array.getJSONObject(i);
                     Block block1 = blocks.get(edge_object.getInt("block1"));
                     Block block2 = blocks.get(edge_object.getInt("block2"));
-                    if(block1.getInput()==null||block1.getInput().size()==0){
-                        wait.add(edge_object.getInt("block1"));
+                    if(!block1.isProcessed()){
+                        if(block1.getInput()==null||block1.getInput().size()==0){
+                            wait.add(edge_object.getInt("block1"));
+                        }
                     }
-                    else if (block1.isProcessed() && !block2.isProcessed()) {
-                        wait.add(edge_object.getInt("block2"));
+                    if(!block2.isProcessed()){
+                        if (block1.isProcessed() && !block2.isProcessed()) {
+                            wait.add(edge_object.getInt("block2"));
+                        }
                     }
+
 
                 }
                 //Wait queue is empty, exit
@@ -352,7 +386,7 @@ public class WorkflowDesignerTest {
                         System.out.println(dependencies.size());
                         System.out.println("Processing "+ wait_block_id);
                         wait_block.processBlock(dependencies, source_block, source_param);
-                        wait_block.setProcessed(true);
+
                         break;
                     }
 
