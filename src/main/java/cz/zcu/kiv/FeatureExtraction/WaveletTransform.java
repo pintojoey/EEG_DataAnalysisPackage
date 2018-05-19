@@ -262,7 +262,7 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
         return result;
     }
 
-    @BlockOutput(name = FEATURE_EXTRACTOR_OUTPUT , type = FEATURE_EXTRACTOR , cardinality = ONE_TO_MANY)
+
     private Function<double[][], double[]> featureExtractionFunc = new Function<double[][], double[]>() {
         public double[] call(double[][] epoch) {
             return extractFeatures(epoch);
@@ -271,9 +271,11 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
 
     @Override
     public void process() {
-        this.getOutput().get(FEATURE_EXTRACTOR_OUTPUT).setValue(this);
         setProcessed(true);
     }
+    
+    @BlockOutput(name = FEATURE_EXTRACTOR_OUTPUT , type = FEATURE_EXTRACTOR , cardinality = ONE_TO_MANY)
+    private IFeatureExtraction iFeatureExtraction = this;
 
 
 

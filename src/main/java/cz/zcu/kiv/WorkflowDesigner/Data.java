@@ -32,20 +32,11 @@ import java.util.ArrayList;
 public class Data {
     private String name;
     private String type;
-    private JSONObject schema;
-    private Object value;
     private String cardinality;
 
     public Data(String name, String type,String cardinality) {
         this.name = name;
         this.type = type;
-        this.cardinality = cardinality;
-    }
-
-    public Data(String name, String type, String cardinality, JSONObject schema) {
-        this.name = name;
-        this.type = type;
-        this.schema = schema;
         this.cardinality = cardinality;
     }
 
@@ -63,22 +54,6 @@ public class Data {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public JSONObject getSchema() {
-        return schema;
-    }
-
-    public void setSchema(JSONObject schema) {
-        this.schema = schema;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
     }
 
     public String getCardinality() {

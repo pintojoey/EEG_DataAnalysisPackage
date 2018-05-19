@@ -136,6 +136,7 @@ public class SVMClassifier extends Block implements IClassifier {
         config.containsKey("config_reg_param") && config.containsKey("config_mini_batch_fraction")){
 
             logger.info("Creating the model with configuration");
+            System.out.println(epochs);
             SVMClassifier.model = new SVMWithSGD().train(
                     training.rdd(),
                     Integer.parseInt(config.get("config_num_iterations")),
@@ -199,14 +200,13 @@ public class SVMClassifier extends Block implements IClassifier {
 
     @Override
     public void process() {
-        setFeatureExtraction((IFeatureExtraction) getInput().get(FEATURE_EXTRACTOR_OUTPUT).getValue());
+        setFeatureExtraction(fe);
         this.config=new HashMap<>();
         config.put("config_num_iterations",String.valueOf(ITERATIONS));
         config.put("config_step_size",String.valueOf(STEP_SIZE));
         config.put("config_reg_param",String.valueOf(REG_PARAMETERS));
         config.put("config_mini_batch_fraction",String.valueOf(MINI_BATCH_FRACTION));
-        train((List<double[][]>) getInput().get(RAW_EPOCHS_OUTPUT).getValue(), (List<Double>) getInput().get(RAW_TARGETS_OUTPUT).getValue(), getFeatureExtraction());
-        getOutput().get(CLASSIFICATION_MODEL_OUTPUT).setValue(model);
+        train(epochs, targets, getFeatureExtraction());
     }
 
 }

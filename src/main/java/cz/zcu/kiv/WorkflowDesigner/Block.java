@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 /***********************************************************************************************************************
@@ -167,14 +168,59 @@ public class Block {
         if(getInput()!=null&&getInput().size()>0) {
             for (String key : getInput().keySet()) {
                 Data destination_data=getInput().get(key);
-                HashMap<String, Data> source = blocks.get(source_blocks.get(key.toLowerCase())).getOutput();
+                Block source_block = blocks.get(source_blocks.get(key.toLowerCase()));
+
+                HashMap<String, Data> source = source_block.getOutput();
                 Data source_data=null;
                 for(String source_key:source_params.keySet()){
                     if(source_key.equals(key.toLowerCase())){
                         source_data=source.get(key);
                     }
                 }
-               destination_data.setValue(source_data.getValue());
+                System.out.println("Saving "+ source_data.getName() +" to "+ destination_data.getName());
+
+                Object value = null;
+
+
+
+                for (Field f: source_block.getClass().getDeclaredFields()) {
+                    f.setAccessible(true);
+
+                    BlockOutput blockOutput = f.getAnnotation(BlockOutput.class);
+                    if (blockOutput != null){
+                        try {
+                            System.out.println("Checking "+blockOutput.name()+" "+ source_data.getName());
+                            System.out.println(f.getName() + f.getType());
+                            if(blockOutput.name().equals(source_data.getName())) {
+                                value = f.get(source_block);
+                                break;
+                            }
+                        } catch ( IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                System.out.println("Object value "+source_data.getName()+" " + value + value.getClass());
+                for (Field f: getClass().getDeclaredFields()) {
+                    f.setAccessible(true);
+
+                    BlockInput blockInput = f.getAnnotation(BlockInput.class);
+                    if (blockInput != null) {
+                        try {
+                            System.out.println(blockInput.name()+" "+ source_data.getName());
+                            if(blockInput.name().equals(destination_data.getName())){
+                                f.set(this,value);
+                                break;
+                            }
+
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
 
             }
         }
@@ -231,29 +277,17 @@ public class Block {
 
             BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
             if (blockProperty != null){
-                    properties.put(blockProperty.name(),new Property(blockProperty.name(),blockProperty.type(),blockProperty.defaultValue()));
+                properties.put(blockProperty.name(),new Property(blockProperty.name(),blockProperty.type(),blockProperty.defaultValue()));
             }
 
             BlockInput blockInput = f.getAnnotation(BlockInput.class);
             if (blockInput != null){
-                try {
-                    Object value = f.get(this);
-                    input.put(blockInput.name(),new Data(blockInput.name(),blockInput.type(),blockInput.cardinality()));
-                    getInput().get(blockInput.name()).setValue(value);
-                } catch ( IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                input.put(blockInput.name(),new Data(blockInput.name(),blockInput.type(),blockInput.cardinality()));
             }
 
             BlockOutput blockOutput = f.getAnnotation(BlockOutput.class);
             if (blockOutput != null){
-                try {
-                    Object value = f.get(this);
-                    output.put(blockOutput.name(),new Data(blockOutput.name(),blockOutput.type(),blockOutput.cardinality()));
-                    getOutput().get(blockOutput.name()).setValue(value);
-                } catch ( IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                output.put(blockOutput.name(),new Data(blockOutput.name(),blockOutput.type(),blockOutput.cardinality()));
             }
         }
 

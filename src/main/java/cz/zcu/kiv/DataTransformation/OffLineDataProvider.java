@@ -408,8 +408,6 @@ public class OffLineDataProvider extends Block {
             args=new String[]{FILE_LOCATION};
             loadData();
             loadFilesFromInfoTxt(FILE_LOCATION);
-            getOutput().get(RAW_EPOCHS_OUTPUT).setValue(epochs);
-            getOutput().get(RAW_TARGETS_OUTPUT).setValue(targets);
             setProcessed(true);
         } catch (IOException e) {
             e.printStackTrace();
