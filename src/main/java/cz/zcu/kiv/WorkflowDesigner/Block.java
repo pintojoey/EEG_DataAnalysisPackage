@@ -70,6 +70,8 @@ public class Block {
         this.name = blockObject.getString("type");
 
         Block block = Workflow.getDefinition(this.name);
+
+        if(block==null)return;
         this.family = block.getFamily();
         this.properties = block.getProperties();
         this.input = block.getInput();
@@ -85,11 +87,10 @@ public class Block {
                         try {
                             if(blockProperty.name().equals(key)){
                                 properties.put(blockProperty.name(), new Property(blockProperty.name(), blockProperty.type(), blockProperty.defaultValue()));
-                                System.out.println(f.getType());
                                 if(f.getType().equals(int.class))
                                     f.set(context,(int) Double.parseDouble(values.getString(key.toLowerCase())));
                                 else if(f.getType().equals(double.class))
-                                f.set(context,Double.parseDouble(values.getString(key.toLowerCase())));
+                                    f.set(context,Double.parseDouble(values.getString(key.toLowerCase())));
 
                                 else f.set(context, f.getType().cast(values.getString(key.toLowerCase())));
                                 break;
@@ -127,8 +128,7 @@ public class Block {
     }
 
     public String toJS() {
-        String js="blocks.register("+this.toJSON().toString()+");";
-        return js;
+        return "blocks.register("+ this.toJSON().toString()+");";
     }
 
     public JSONObject toJSON(){
@@ -184,14 +184,11 @@ public class Block {
                 Data source_data=null;
                 for(String source_key:source_params.keySet()){
                     if(source_key.equals(key.toLowerCase())){
-                        source_data=source.get(key);
+                        source_data=source.get(source_params.get(key));
+                        break;
                     }
                 }
-                System.out.println("Saving "+ source_data.getName() +" to "+ destination_data.getName());
-
                 Object value = null;
-
-
 
                 for (Field f: source_block.getContext().getClass().getDeclaredFields()) {
                     f.setAccessible(true);
@@ -199,8 +196,6 @@ public class Block {
                     BlockOutput blockOutput = f.getAnnotation(BlockOutput.class);
                     if (blockOutput != null){
                         try {
-                            System.out.println("Checking "+blockOutput.name()+" "+ source_data.getName());
-                            System.out.println(f.getName() + f.getType());
                             if(blockOutput.name().equals(source_data.getName())) {
                                 value = f.get(source_block.getContext());
                                 break;
@@ -211,14 +206,12 @@ public class Block {
                     }
                 }
 
-                System.out.println("Object value "+source_data.getName()+" " + value + value.getClass());
                 for (Field f: context.getClass().getDeclaredFields()) {
                     f.setAccessible(true);
 
                     BlockInput blockInput = f.getAnnotation(BlockInput.class);
                     if (blockInput != null) {
                         try {
-                            System.out.println(blockInput.name()+" "+ source_data.getName());
                             if(blockInput.name().equals(destination_data.getName())){
                                 f.set(context,value);
                                 break;
@@ -285,9 +278,9 @@ public class Block {
 
     public void initialize(){
         if(getProperties()==null)
-        setProperties(new HashMap<String,Property>());
+            setProperties(new HashMap<String,Property>());
         if(getInput()==null)
-        setInput(new HashMap<String, Data>());
+            setInput(new HashMap<String, Data>());
         if(getOutput()==null)
             setOutput(new HashMap<String, Data>());
 

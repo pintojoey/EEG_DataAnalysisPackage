@@ -133,7 +133,6 @@ public class SVMClassifier implements IClassifier {
         config.containsKey("config_reg_param") && config.containsKey("config_mini_batch_fraction")){
 
             logger.info("Creating the model with configuration");
-            System.out.println(epochs);
             SVMClassifier.model = new SVMWithSGD().train(
                     training.rdd(),
                     Integer.parseInt(config.get("config_num_iterations")),
