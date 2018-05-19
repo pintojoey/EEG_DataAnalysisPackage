@@ -3,6 +3,7 @@ package cz.zcu.kiv.FeatureExtraction;
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.Utils.SignalProcessing;
 import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockExecute;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
@@ -16,7 +17,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.function.Function;
 
-import java.util.HashMap;
 
 import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
 import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
@@ -52,7 +52,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
  *
  **********************************************************************************************************************/
 @BlockType(type=WAVELET_TRANSFORM, family = FEATURE_EXTRACTION)
-public class WaveletTransform extends Block implements IFeatureExtraction {
+public class WaveletTransform  implements IFeatureExtraction {
     private static Log logger = LogFactory.getLog(WaveletTransform.class);
 
     private static final long serialVersionUID = 7526472295622776147L;
@@ -269,11 +269,10 @@ public class WaveletTransform extends Block implements IFeatureExtraction {
         }
     };
 
-    @Override
+    @BlockExecute
     public void process() {
-        setProcessed(true);
     }
-    
+
     @BlockOutput(name = FEATURE_EXTRACTOR_OUTPUT , type = FEATURE_EXTRACTOR , cardinality = ONE_TO_MANY)
     private IFeatureExtraction iFeatureExtraction = this;
 

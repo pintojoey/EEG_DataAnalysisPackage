@@ -1,9 +1,10 @@
 package cz.zcu.kiv.DataTransformation;
 
-import cz.zcu.kiv.WorkflowDesigner.*;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockExecute;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
+import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.signal.*;
 import cz.zcu.kiv.Utils.*;
 import org.apache.commons.logging.Log;
@@ -51,7 +52,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.OFFLINE_DATA_PROVIDER;
  *
  **********************************************************************************************************************/
 @BlockType(type = INFOTXT_FILE, family = OFFLINE_DATA_PROVIDER)
-public class OffLineDataProvider extends Block {
+public class OffLineDataProvider {
 
     //
     private String vhdrFile;
@@ -401,14 +402,12 @@ public class OffLineDataProvider extends Block {
         return this.targets;
     }
 
-    @Override
+    @BlockExecute
     public void process() {
         try {
-
             args=new String[]{FILE_LOCATION};
             loadData();
             loadFilesFromInfoTxt(FILE_LOCATION);
-            setProcessed(true);
         } catch (IOException e) {
             e.printStackTrace();
         }

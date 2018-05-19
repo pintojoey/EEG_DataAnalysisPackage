@@ -90,7 +90,7 @@ public class Workflow {
         Set<Class<?>> block_types = new Reflections("cz.zcu.kiv").getTypesAnnotatedWith(BlockType.class);
         for(Class block_type:block_types){
             try {
-                Block block= (Block) block_type.newInstance();
+                Block block= new Block(block_type.newInstance());
                 assert block!=null;
                 Annotation annotation = block_type.getAnnotation(BlockType.class);
                 Class<? extends Annotation> type = annotation.annotationType();
@@ -152,7 +152,7 @@ public class Workflow {
                 }
                 if (block_object.getString("type").equals(block_type_name)){
                     try {
-                        block = (Block) block_type.newInstance();
+                        block = new Block(block_type.newInstance());
                         break;
                     } catch (InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();

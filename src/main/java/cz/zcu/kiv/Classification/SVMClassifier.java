@@ -3,10 +3,7 @@ package cz.zcu.kiv.Classification;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
 import cz.zcu.kiv.Utils.SparkInitializer;
-import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockInput;
-import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
-import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
-import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
+import cz.zcu.kiv.WorkflowDesigner.Annotations.*;
 import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.WorkflowDesigner.Data;
 import org.apache.commons.io.FileUtils;
@@ -62,7 +59,7 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
  *
  **********************************************************************************************************************/
 @BlockType(type = SVM_CLASSIFIER, family = MACHINE_LEARNING)
-public class SVMClassifier extends Block implements IClassifier {
+public class SVMClassifier implements IClassifier {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
 
@@ -198,7 +195,7 @@ public class SVMClassifier extends Block implements IClassifier {
         this.config = config;
     }
 
-    @Override
+    @BlockExecute
     public void process() {
         setFeatureExtraction(fe);
         this.config=new HashMap<>();

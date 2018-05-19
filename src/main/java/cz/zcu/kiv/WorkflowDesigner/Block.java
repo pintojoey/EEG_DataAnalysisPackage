@@ -1,5 +1,6 @@
 package cz.zcu.kiv.WorkflowDesigner;
 
+import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockExecute;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockInput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
@@ -7,7 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /***********************************************************************************************************************
@@ -43,7 +45,15 @@ public class Block {
     private HashMap<String, Data> input;
     private HashMap<String, Data> output;
     private HashMap<String,Property> properties;
+    private Object context;
 
+    public Object getContext() {
+        return context;
+    }
+
+    public void setContext(Object context) {
+        this.context = context;
+    }
 
     //Temporary variables
     private boolean processed=false;
@@ -68,7 +78,7 @@ public class Block {
         JSONObject values = blockObject.getJSONObject("values");
         for(String key:this.properties.keySet()){
             if(values.has(key.toLowerCase())){
-                for (Field f: getClass().getDeclaredFields()) {
+                for (Field f: context.getClass().getDeclaredFields()) {
                     f.setAccessible(true);
                     BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
                     if (blockProperty != null) {
@@ -77,11 +87,11 @@ public class Block {
                                 properties.put(blockProperty.name(), new Property(blockProperty.name(), blockProperty.type(), blockProperty.defaultValue()));
                                 System.out.println(f.getType());
                                 if(f.getType().equals(int.class))
-                                    f.set(this,(int) Double.parseDouble(values.getString(key.toLowerCase())));
+                                    f.set(context,(int) Double.parseDouble(values.getString(key.toLowerCase())));
                                 else if(f.getType().equals(double.class))
-                                f.set(this,Double.parseDouble(values.getString(key.toLowerCase())));
+                                f.set(context,Double.parseDouble(values.getString(key.toLowerCase())));
 
-                                else f.set(this, f.getType().cast(values.getString(key.toLowerCase())));
+                                else f.set(context, f.getType().cast(values.getString(key.toLowerCase())));
                                 break;
                             }
                         } catch (IllegalAccessException e) {
@@ -95,8 +105,8 @@ public class Block {
 
     }
 
-    public Block(){
-
+    public Block(Object context){
+        this.context=context;
     }
 
 
@@ -183,7 +193,7 @@ public class Block {
 
 
 
-                for (Field f: source_block.getClass().getDeclaredFields()) {
+                for (Field f: source_block.getContext().getClass().getDeclaredFields()) {
                     f.setAccessible(true);
 
                     BlockOutput blockOutput = f.getAnnotation(BlockOutput.class);
@@ -192,7 +202,7 @@ public class Block {
                             System.out.println("Checking "+blockOutput.name()+" "+ source_data.getName());
                             System.out.println(f.getName() + f.getType());
                             if(blockOutput.name().equals(source_data.getName())) {
-                                value = f.get(source_block);
+                                value = f.get(source_block.getContext());
                                 break;
                             }
                         } catch ( IllegalAccessException e) {
@@ -202,7 +212,7 @@ public class Block {
                 }
 
                 System.out.println("Object value "+source_data.getName()+" " + value + value.getClass());
-                for (Field f: getClass().getDeclaredFields()) {
+                for (Field f: context.getClass().getDeclaredFields()) {
                     f.setAccessible(true);
 
                     BlockInput blockInput = f.getAnnotation(BlockInput.class);
@@ -210,7 +220,7 @@ public class Block {
                         try {
                             System.out.println(blockInput.name()+" "+ source_data.getName());
                             if(blockInput.name().equals(destination_data.getName())){
-                                f.set(this,value);
+                                f.set(context,value);
                                 break;
                             }
 
@@ -229,7 +239,16 @@ public class Block {
     }
 
     public void process(){
-
+        for(Method method:context.getClass().getDeclaredMethods()){
+            method.setAccessible(true);
+            if(method.getAnnotation(BlockExecute.class)!=null){
+                try {
+                    method.invoke(context);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public HashMap<String, Property> getProperties() {
@@ -272,7 +291,7 @@ public class Block {
         if(getOutput()==null)
             setOutput(new HashMap<String, Data>());
 
-        for (Field f: getClass().getDeclaredFields()) {
+        for (Field f: context.getClass().getDeclaredFields()) {
             f.setAccessible(true);
 
             BlockProperty blockProperty = f.getAnnotation(BlockProperty.class);
@@ -292,5 +311,4 @@ public class Block {
         }
 
     }
-
 }
