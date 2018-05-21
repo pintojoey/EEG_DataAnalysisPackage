@@ -4,7 +4,6 @@ import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockExecute;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
-import cz.zcu.kiv.WorkflowDesigner.Block;
 import cz.zcu.kiv.signal.*;
 import cz.zcu.kiv.Utils.*;
 import org.apache.commons.logging.Log;

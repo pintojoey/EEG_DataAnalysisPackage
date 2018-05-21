@@ -1,10 +1,4 @@
-import cz.zcu.kiv.Classification.*;
-import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
-import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import cz.zcu.kiv.Pipeline.PipelineBuilder;
-import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockType;
-import cz.zcu.kiv.WorkflowDesigner.Block;
-import cz.zcu.kiv.WorkflowDesigner.WorkflowBlock;
 import cz.zcu.kiv.WorkflowDesigner.Workflow;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -14,18 +8,11 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.INFOTXT_FILE;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.SVM_CLASSIFIER;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
+import java.nio.charset.Charset;
 
 /***********************************************************************************************************************
  *
@@ -67,17 +54,18 @@ public class WorkflowDesignerTest {
 
 
     @Test
-    public void worklflow_initializer_test() throws IOException {
-        Workflow.initializeBlocks();
+    public void worklflow_initializer_test() throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        JSONArray blocks_array = new Workflow("cz.zcu.kiv").initializeBlocks();
+        FileUtils.writeStringToFile(new File("workflow_designer/workflow_blocks.json"),blocks_array.toString(4),Charset.defaultCharset());
 
     }
 
     @Test
     public void workflow_parse() throws Exception{
-            Workflow.initializeBlocks();
-            String import_json = FileUtils.readFileToString(new File(Workflow.WORKFLOW_DESIGNER_DIRECTORY+"export.json"));
-            JSONObject jobject = new JSONObject(import_json);
-            Workflow.execute(jobject);
+        String json = FileUtils.readFileToString(new File("workflow_designer/export.json"),Charset.defaultCharset());
+        JSONObject jsonObject = new JSONObject(json);
+        Workflow workflow = new Workflow("cz.zcu.kiv");
+        workflow.execute(jsonObject);
 
     }
 }
