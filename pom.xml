@@ -116,6 +116,11 @@
             <artifactId>guava</artifactId>
             <version>25.0-jre</version>
         </dependency>
+        <dependency>
+            <groupId>cz.zcu.kiv</groupId>
+            <artifactId>workflow_designer</artifactId>
+            <version>1.0</version>
+        </dependency>
 
 
     </dependencies>

@@ -22,14 +22,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.*;
-import static cz.zcu.kiv.WorkflowDesigner.Field.*;
+import static cz.zcu.kiv.WorkflowConstants.DataField.*;
+import static cz.zcu.kiv.WorkflowConstants.DataType.*;
+import static cz.zcu.kiv.WorkflowConstants.Field.*;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.SVM_CLASSIFIER;
+import static cz.zcu.kiv.WorkflowConstants.WorkflowBlock.SVM_CLASSIFIER;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_ONE;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.MACHINE_LEARNING;
+import static cz.zcu.kiv.WorkflowConstants.WorkflowFamily.MACHINE_LEARNING;
 
 /***********************************************************************************************************************
  *

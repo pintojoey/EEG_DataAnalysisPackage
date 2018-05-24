@@ -18,13 +18,13 @@ import java.net.URI;
 import java.nio.ByteOrder;
 import java.util.*;
 
-import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.*;
-import static cz.zcu.kiv.WorkflowDesigner.Field.FILE_LOCATION_FIELD;
+import static cz.zcu.kiv.WorkflowConstants.DataField.*;
+import static cz.zcu.kiv.WorkflowConstants.DataType.*;
+import static cz.zcu.kiv.WorkflowConstants.Field.FILE_LOCATION_FIELD;
+import static cz.zcu.kiv.WorkflowConstants.WorkflowBlock.INFOTXT_FILE;
+import static cz.zcu.kiv.WorkflowConstants.WorkflowFamily.OFFLINE_DATA_PROVIDER;
 import static cz.zcu.kiv.WorkflowDesigner.Type.STRING;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.INFOTXT_FILE;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.OFFLINE_DATA_PROVIDER;
 
 /***********************************************************************************************************************
  *

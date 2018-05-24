@@ -2,7 +2,6 @@ package cz.zcu.kiv.FeatureExtraction;
 
 import cz.zcu.kiv.Utils.Const;
 import cz.zcu.kiv.Utils.SignalProcessing;
-import cz.zcu.kiv.WorkflowDesigner.*;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockExecute;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockOutput;
 import cz.zcu.kiv.WorkflowDesigner.Annotations.BlockProperty;
@@ -18,13 +17,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.function.Function;
 
 
-import static cz.zcu.kiv.WorkflowDesigner.DataField.*;
-import static cz.zcu.kiv.WorkflowDesigner.DataType.FEATURE_EXTRACTOR;
-import static cz.zcu.kiv.WorkflowDesigner.Field.*;
+import static cz.zcu.kiv.WorkflowConstants.DataField.*;
+import static cz.zcu.kiv.WorkflowConstants.DataType.FEATURE_EXTRACTOR;
+import static cz.zcu.kiv.WorkflowConstants.Field.*;
+import static cz.zcu.kiv.WorkflowConstants.WorkflowBlock.WAVELET_TRANSFORM;
+import static cz.zcu.kiv.WorkflowConstants.WorkflowFamily.FEATURE_EXTRACTION;
 import static cz.zcu.kiv.WorkflowDesigner.Type.NUMBER;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowBlock.WAVELET_TRANSFORM;
 import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
-import static cz.zcu.kiv.WorkflowDesigner.WorkflowFamily.FEATURE_EXTRACTION;
 
 
 /***********************************************************************************************************************
@@ -64,7 +63,7 @@ public class WaveletTransform  implements IFeatureExtraction {
     /**
      * Number of samples to be used - Fs = 1000 Hz expected
      */
-    @BlockProperty(name = EPOCH_SIZE_FIELD, type = NUMBER, defaultValue = "1")
+    @BlockProperty(name = EPOCH_SIZE_FIELD, type = NUMBER, defaultValue = "512")
     private int EPOCH_SIZE = 512;
 
     /**
@@ -81,7 +80,7 @@ public class WaveletTransform  implements IFeatureExtraction {
     /**
      * Name of the wavelet
      */
-    @BlockProperty(name=NAME_FIELD, type=NUMBER, defaultValue="0")
+    @BlockProperty(name=NAME_FIELD, type=NUMBER, defaultValue="8")
     private int NAME;
 
     /**

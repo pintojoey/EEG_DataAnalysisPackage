@@ -1,4 +1,4 @@
-package cz.zcu.kiv.WorkflowDesigner;
+package cz.zcu.kiv.WorkflowConstants;
 /***********************************************************************************************************************
  *
  * This file is part of the EEG_Analysis project
@@ -20,12 +20,17 @@ package cz.zcu.kiv.WorkflowDesigner;
  *
  ***********************************************************************************************************************
  *
- * WorkflowFamily, 2018/17/05 6:32 Joey Pinto
+ * DataField, 2018/17/05 6:32 Joey Pinto
  *
- * This class declares constants to be used as names for workflow block families
+ * This class declares constants to be used as names for input/output fields
  **********************************************************************************************************************/
-public class WorkflowFamily {
-    public static final String FEATURE_EXTRACTION = "Feature Extraction";
-    public static final String OFFLINE_DATA_PROVIDER = "Offline Data Provider";
-    public static final String MACHINE_LEARNING = "Machine Learning";
+
+public class DataField {
+    public static final String SIGNAL_INPUT = "SignalIn";
+    public static final String SIGNAL_OUTPUT = "SignalOut";
+    public static final String CLASSIFICATION_MODEL_OUTPUT = "ClassifyModelOut";
+    public static final String CLASSIFICATION_STATISTICS_OUTPUT = "ClassifyStatsOut";
+    public static final String FEATURE_EXTRACTOR_OUTPUT = "FeatureExtractorOut";
+    public static final String RAW_EPOCHS_OUTPUT = "RawEpochsOut";
+    public static final String RAW_TARGETS_OUTPUT = "RawTargetsOut";
 }

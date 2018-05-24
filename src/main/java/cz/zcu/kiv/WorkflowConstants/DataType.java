@@ -1,4 +1,4 @@
-package cz.zcu.kiv.WorkflowDesigner;
+package cz.zcu.kiv.WorkflowConstants;
 /***********************************************************************************************************************
  *
  * This file is part of the EEG_Analysis project

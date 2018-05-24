@@ -1,4 +1,10 @@
-package cz.zcu.kiv.WorkflowDesigner;
+package cz.zcu.kiv.WorkflowConstants;
+
+import cz.zcu.kiv.WorkflowDesigner.FieldMismatchException;
+import cz.zcu.kiv.WorkflowDesigner.Workflow;
+
+import java.lang.reflect.InvocationTargetException;
+
 /***********************************************************************************************************************
  *
  * This file is part of the EEG_Analysis project
@@ -20,17 +26,12 @@ package cz.zcu.kiv.WorkflowDesigner;
  *
  ***********************************************************************************************************************
  *
- * DataField, 2018/17/05 6:32 Joey Pinto
+ * WorkflowBlock, 2018/17/05 6:32 Joey Pinto
  *
- * This class declares constants to be used as names for input/output fields
+ * This class declares constants to be used as names for block_definitions
  **********************************************************************************************************************/
-
-public class DataField {
-    public static final String SIGNAL_INPUT = "SignalIn";
-    public static final String SIGNAL_OUTPUT = "SignalOut";
-    public static final String CLASSIFICATION_MODEL_OUTPUT = "ClassifyModelOut";
-    public static final String CLASSIFICATION_STATISTICS_OUTPUT = "ClassifyStatsOut";
-    public static final String FEATURE_EXTRACTOR_OUTPUT = "FeatureExtractorOut";
-    public static final String RAW_EPOCHS_OUTPUT = "RawEpochsOut";
-    public static final String RAW_TARGETS_OUTPUT = "RawTargetsOut";
+public class WorkflowBlock {
+    public static final String WAVELET_TRANSFORM = "Wavelet Transform";
+    public static final String INFOTXT_FILE = "Infotxt File";
+    public static final String SVM_CLASSIFIER = "SVM Classifier";
 }
