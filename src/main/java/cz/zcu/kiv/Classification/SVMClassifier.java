@@ -17,9 +17,7 @@ import org.apache.spark.mllib.linalg.DenseVector;
 import org.apache.spark.mllib.regression.LabeledPoint;
 import scala.Tuple2;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -188,7 +186,7 @@ public class SVMClassifier implements IClassifier,Serializable {
     }
 
     @BlockExecute
-    public String process() {
+    public File process() {
         setFeatureExtraction(fe);
         this.config=new HashMap<>();
         config.put("config_num_iterations",String.valueOf(ITERATIONS));
@@ -197,7 +195,16 @@ public class SVMClassifier implements IClassifier,Serializable {
         config.put("config_mini_batch_fraction",String.valueOf(MINI_BATCH_FRACTION));
 
         train(epochs, targets, getFeatureExtraction());
-        return model.formatVersion();
+        try {
+            File svmFile = new File("svm.model");
+            FileOutputStream fis = new FileOutputStream(svmFile);
+            ObjectOutputStream oos = new ObjectOutputStream(fis);
+            oos.writeObject(model);
+            return svmFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
