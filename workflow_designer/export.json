@@ -46,7 +46,7 @@
             "x": -87.75,
             "y": 6,
             "type": "SVM Classifier",
-            "module": null,
+            "module": "spark_eeg-1.3-allinone.jar:cz.zcu.kiv",
             "values": {
                 "Step size": "1",
                 "Mini Batch Fractions": "1",
@@ -59,7 +59,7 @@
             "x": -340.75,
             "y": -32,
             "type": "Infotxt File",
-            "module": null,
+            "module": "spark_eeg-1.3-allinone.jar:cz.zcu.kiv",
             "values": {
                 "File location": "/data/test/infoTrain.txt"
             }
@@ -69,7 +69,7 @@
             "x": -357.75,
             "y": 117,
             "type": "Wavelet Transform",
-            "module": null,
+            "module": "spark_eeg-1.3-allinone.jar:cz.zcu.kiv",
             "values": {
                 "Epoch Size": "512",
                 "Skip Samples": "0",

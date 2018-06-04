@@ -17,6 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.function.Function;
 
 
+import java.io.Serializable;
+
 import static cz.zcu.kiv.WorkflowConstants.DataField.*;
 import static cz.zcu.kiv.WorkflowConstants.DataType.FEATURE_EXTRACTOR;
 import static cz.zcu.kiv.WorkflowConstants.Field.*;
@@ -50,8 +52,8 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
  * WaveletTransform, 2017/06/11 15:39 Dorian Beganovic
  *
  **********************************************************************************************************************/
-@BlockType(type=WAVELET_TRANSFORM, family = FEATURE_EXTRACTION)
-public class WaveletTransform  implements IFeatureExtraction {
+@BlockType(type=WAVELET_TRANSFORM, family = FEATURE_EXTRACTION, runAsJar = true)
+public class WaveletTransform  implements IFeatureExtraction, Serializable {
     private static Log logger = LogFactory.getLog(WaveletTransform.class);
 
     private static final long serialVersionUID = 7526472295622776147L;

@@ -36,7 +36,9 @@ public class Const {
     //-------------------------Hadoop HDFS Configuration---------------
 
     public static final String HDFS_URI = "hdfs://192.168.139.128:8020";
+
     public static  Configuration HDFS_CONF = new Configuration();
+
 
     //Username of hadoop linux user with permission to write to HDFS
     public static final String HADOOP_USER_NAME = "hdfs";

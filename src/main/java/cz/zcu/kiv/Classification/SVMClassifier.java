@@ -19,6 +19,7 @@ import scala.Tuple2;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,8 +56,8 @@ import static cz.zcu.kiv.WorkflowConstants.WorkflowFamily.MACHINE_LEARNING;
  * SVMClassifier, 2017/06/27 12:13 Dorian Beganovic
  *
  **********************************************************************************************************************/
-@BlockType(type = SVM_CLASSIFIER, family = MACHINE_LEARNING)
-public class SVMClassifier implements IClassifier {
+@BlockType(type = SVM_CLASSIFIER, family = MACHINE_LEARNING, runAsJar = true)
+public class SVMClassifier implements IClassifier,Serializable {
 
     private static Log logger = LogFactory.getLog(SVMClassifier.class);
 
@@ -118,25 +119,20 @@ public class SVMClassifier implements IClassifier {
         SVMClassifier.fe = fe;
         JavaRDD<double[][]> rddEpochs = SparkInitializer.getJavaSparkContext().parallelize(epochs);
         JavaRDD<Double> rddTargets = SparkInitializer.getJavaSparkContext().parallelize(targets);
-
         JavaRDD<double[]> features = rddEpochs.map(featureExtractionFunc);
-
         JavaPairRDD<Double, double[]> rawData = rddTargets.zip(features);
-
         JavaRDD<LabeledPoint> training = rawData.map(unPackFunction);
-
         // Run training algorithm to build the model
         if(config.containsKey("config_num_iterations") && config.containsKey("config_step_size") &&
         config.containsKey("config_reg_param") && config.containsKey("config_mini_batch_fraction")){
-
             logger.info("Creating the model with configuration");
-            SVMClassifier.model = new SVMWithSGD().train(
-                    training.rdd(),
-                    Integer.parseInt(config.get("config_num_iterations")),
-                    Double.parseDouble(config.get("config_step_size")),
-                    Double.parseDouble(config.get("config_reg_param")),
-                    Double.parseDouble(config.get("config_mini_batch_fraction"))
-            );
+                SVMClassifier.model = SVMWithSGD.train(
+                        training.rdd(),
+                        Integer.parseInt(config.get("config_num_iterations")),
+                        Double.parseDouble(config.get("config_step_size")),
+                        Double.parseDouble(config.get("config_reg_param")),
+                        Double.parseDouble(config.get("config_mini_batch_fraction"))
+                );
         }
         else {
             logger.info("Creating the model without configuration");
@@ -192,14 +188,16 @@ public class SVMClassifier implements IClassifier {
     }
 
     @BlockExecute
-    public void process() {
+    public String process() {
         setFeatureExtraction(fe);
         this.config=new HashMap<>();
         config.put("config_num_iterations",String.valueOf(ITERATIONS));
         config.put("config_step_size",String.valueOf(STEP_SIZE));
         config.put("config_reg_param",String.valueOf(REG_PARAMETERS));
         config.put("config_mini_batch_fraction",String.valueOf(MINI_BATCH_FRACTION));
+
         train(epochs, targets, getFeatureExtraction());
+        return model.formatVersion();
     }
 
 }

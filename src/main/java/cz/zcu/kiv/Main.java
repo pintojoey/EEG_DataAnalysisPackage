@@ -39,9 +39,8 @@ public class Main {
 
     private static Log logger = LogFactory.getLog(Main.class);
 
-    public static void main(String[] args) throws FieldMismatchException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public static void main(String[] args) {
 
-        new Workflow(args[0]).execute(new JSONObject(args[1]));
 
     }
 }

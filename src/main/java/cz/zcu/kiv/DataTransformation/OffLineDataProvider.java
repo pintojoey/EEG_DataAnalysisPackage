@@ -14,6 +14,7 @@ import org.apache.hadoop.fs.Path;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URI;
 import java.nio.ByteOrder;
 import java.util.*;
@@ -50,8 +51,8 @@ import static cz.zcu.kiv.WorkflowDesigner.WorkflowCardinality.ONE_TO_MANY;
  * OffLineDataProvider, 2017/05/25 22:05 Dorian Beganovic
  *
  **********************************************************************************************************************/
-@BlockType(type = INFOTXT_FILE, family = OFFLINE_DATA_PROVIDER)
-public class OffLineDataProvider {
+@BlockType(type = INFOTXT_FILE, family = OFFLINE_DATA_PROVIDER, runAsJar = true)
+public class OffLineDataProvider implements Serializable {
 
     //
     private String vhdrFile;
@@ -109,12 +110,16 @@ public class OffLineDataProvider {
      */
     public void loadData()  {
         try {
+            Const.HDFS_CONF.set("fs.defaultFS",Const.HDFS_URI);
+            Const.HDFS_CONF.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+            Const.HDFS_CONF.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
             this.fs = FileSystem.get(URI.create(Const.HDFS_URI), Const.HDFS_CONF);
             logger.info("Parsing the input...");
             handleInput(args);
             logger.info("Processing files...");
             processEEGFiles();
         } catch (Exception e) {
+            e.printStackTrace();
             logger.fatal(e.getMessage());
         }
     }
@@ -304,7 +309,8 @@ public class OffLineDataProvider {
      * @throws IOException in case the .txt or one of specified .eeg file does not exist
      */
     private void loadFilesFromInfoTxt(String fileLocation) throws IOException {
-        logger.info("Reading file from info.txt file");
+        logger.info("Reading file from"+fileLocation);
+        logger.info("filesystem:"+fs);
         // init a new reader for hadoop hdfs
         BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(new Path(fileLocation))));
         String line;

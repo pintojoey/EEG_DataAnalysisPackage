@@ -188,13 +188,18 @@
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-yarn-server-common:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-mapreduce-client-shuffle:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-yarn-api:2.7.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-mapreduce-client-jobclient:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-mapreduce-client-core:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-yarn-common:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.2.2" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.stream:stax-api:1.0-2" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-client:1.9" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-mapreduce-client-jobclient:2.7.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.jersey.contribs:jersey-guice:1.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-servlet:3.0" level="project" />
     <orderEntry type="library" name="Maven: cz.zcu.kiv:eegdsp:1.0" level="project" />
     <orderEntry type="library" name="Maven: cz.zcu.kiv:eegloader-hdfs:2.4" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
@@ -277,6 +282,6 @@
     <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
-    <orderEntry type="library" name="Maven: cz.zcu.kiv:workflow_designer:1.0" level="project" />
+    <orderEntry type="library" name="Maven: cz.zcu.kiv:workflow_designer:1.4" level="project" />
   </component>
 </module>
